@@ -23,6 +23,8 @@ export interface PortfolioRow {
   /** Big serialized to string — keeps row props primitive for memo. */
   valueUsd: string;
   changePct24h?: number;
+  /** Reference-stable between refetches — safe for memo. */
+  sparkline7d?: number[];
 }
 
 /** Holdings (client state) × market prices (server state), joined at render. */
@@ -50,6 +52,7 @@ export function usePortfolio(sort: SortDirection) {
         amount,
         valueUsd: valueAsset(amount, market?.current_price).toString(),
         changePct24h: market?.price_change_percentage_24h,
+        sparkline7d: market?.sparkline_in_7d?.price,
       };
     }).sort((a, b) => factor * big(a.valueUsd).cmp(b.valueUsd));
   }, [holdings, markets, sort]);

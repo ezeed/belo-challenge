@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
+import { Sparkline } from '@/components/sparkline';
 import { Image } from '@/components/ui/image';
 import { Text } from '@/components/ui/text';
 import { formatAmount, formatPercent, formatUsd } from '@/features/shared';
@@ -13,10 +14,11 @@ interface AssetRowProps {
   amount: number;
   valueUsd: string;
   changePct24h?: number;
+  sparkline7d?: number[];
   onPress?: () => void;
 }
 
-/** Memoized: primitive props only — rows skip re-render unless their data changes. */
+/** Memoized: primitive or reference-stable props only — rows skip re-render unless their data changes. */
 export const AssetRow = memo(function AssetRow({
   name,
   symbol,
@@ -24,6 +26,7 @@ export const AssetRow = memo(function AssetRow({
   amount,
   valueUsd,
   changePct24h,
+  sparkline7d,
   onPress,
 }: AssetRowProps) {
   const { i18n } = useTranslation();
@@ -43,6 +46,7 @@ export const AssetRow = memo(function AssetRow({
         <Text className="font-semibold">{name}</Text>
         <Text variant="muted">{holding}</Text>
       </View>
+      {sparkline7d && <Sparkline prices={sparkline7d} />}
       <View className="items-end gap-0.5">
         <Text className="font-semibold">{value}</Text>
         {changePct24h !== undefined && (

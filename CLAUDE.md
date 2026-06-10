@@ -85,6 +85,11 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Tabs: Home (`index`) · Swap · Settings.
 - Tab icons: SF Symbols (`sf`) + Material (`md`). Lucide for in-screen icons.
 
+## Charts
+
+- Row sparkline: hand-rolled memoized `react-native-svg` polyline (`src/components/sparkline.tsx`), colored by net direction over the rendered window via `chartUp`/`chartDown` from `useTheme().colors`. Default window: last 24 points of the hourly 7d series = 24h, matching the row's 24h %. Never mount a chart-lib component per list row.
+- Point normalization: pure `sparklinePoints(prices, width, height, padding?, minRangeRatio?)` (`src/components/sparkline-points.ts`); display-only math, big.js not required. `minRangeRatio` = range floor so stablecoin-tiny ranges render near-flat (component uses 0.005).
+
 ## Code style
 
 - Strict TS, no `any`. Functional patterns.

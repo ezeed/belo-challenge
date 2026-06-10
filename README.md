@@ -18,6 +18,14 @@ The alternative — modeling a full fake wallet backend with balances in the Tan
 was rejected: it creates two sources of truth (mock storage + query cache) and forces solving
 latency problems (invalidation, optimistic updates, rollback) that cannot occur locally.
 
+### 24h change color: no neutral state (deferred)
+
+The 24h % and the row sparkline color binary by the raw sign, while the displayed percentage is
+rounded to 2 decimals — so a raw `-0.004%` renders as `0 %` tinted red, giving a "bad news" first
+impression for a change that is effectively zero. A third, gray "flat" state keyed to display
+precision (|pct| < 0.005) was considered and deliberately deferred: it's UX polish with no
+engineering signal for this challenge's scope.
+
 ---
 
 # Welcome to your Expo app 👋

@@ -6,7 +6,10 @@ module.exports = {
   safelist:
     process.env.NODE_ENV === 'development'
       ? [
-          { pattern: /^(p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap)-\d+(\.\d+)?$/ },
+          {
+            pattern:
+              /^(p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap)-\d+(\.\d+)?$/,
+          },
           { pattern: /^(h|w)-\d+(\.\d+)?$/ },
           { pattern: /^rounded(-(sm|md|lg|xl|2xl|3xl|full))?$/ },
           { pattern: /^text-(xs|sm|base|lg|xl|[2-6]xl)$/ },

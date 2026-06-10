@@ -36,6 +36,7 @@ export function PortfolioScreen() {
         amount={item.amount}
         valueUsd={item.valueUsd}
         changePct24h={item.changePct24h}
+        sparkline7d={item.sparkline7d}
       />
     ),
     [],
