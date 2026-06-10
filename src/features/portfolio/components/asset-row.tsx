@@ -5,7 +5,13 @@ import { Pressable, View } from 'react-native';
 import { Sparkline } from '@/components/sparkline';
 import { Image } from '@/components/ui/image';
 import { Text } from '@/components/ui/text';
-import { formatAmount, formatPercent, formatUsd } from '@/features/shared';
+import {
+  formatAmount,
+  formatPercent,
+  formatUsd,
+  MASKED_AMOUNT,
+  usePrivacyStore,
+} from '@/features/shared';
 
 interface AssetRowProps {
   name: string;
@@ -31,8 +37,11 @@ export const AssetRow = memo(function AssetRow({
 }: AssetRowProps) {
   const { i18n } = useTranslation();
   const locale = i18n.language;
-  const holding = `${formatAmount(amount, 8, locale)} ${symbol}`;
-  const value = formatUsd(valueUsd, locale);
+  const hideAmounts = usePrivacyStore((state) => state.hideAmounts);
+  const holding = hideAmounts
+    ? `${MASKED_AMOUNT} ${symbol}`
+    : `${formatAmount(amount, 8, locale)} ${symbol}`;
+  const value = hideAmounts ? MASKED_AMOUNT : formatUsd(valueUsd, locale);
 
   return (
     <Pressable

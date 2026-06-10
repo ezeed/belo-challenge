@@ -19,6 +19,8 @@
     "totalBalance": "Total balance",
     "assets": "Assets",
     "sortByValue": "Sort by USD value",
+    "hideAmounts": "Hide amounts",
+    "showAmounts": "Show amounts",
     "ascending": "Ascending",
     "descending": "Descending"
   }
