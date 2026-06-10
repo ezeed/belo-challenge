@@ -7,6 +7,12 @@ import { sparklinePoints } from './sparkline-points';
 
 interface SparklineProps {
   prices: number[];
+  /**
+   * Direction override — pass the sign of the change the user reads next to
+   * the chart (the lazily-refreshed sparkline series can contradict the live
+   * 24h %). Falls back to the rendered window's endpoints.
+   */
+  isUp?: boolean;
   /** Trailing points to render. Hourly series → 24 = a 24h window, matching the row's 24h %. */
   lastN?: number;
   width?: number;
@@ -23,21 +29,24 @@ const MIN_RANGE_RATIO = 0.005;
  */
 export const Sparkline = memo(function Sparkline({
   prices,
+  isUp: isUpOverride,
   lastN = 24,
   width = 64,
   height = 24,
 }: SparklineProps) {
   const { colors } = useTheme();
 
-  const { points, isUp } = useMemo(() => {
+  const { points, endpointsUp } = useMemo(() => {
     const series = prices.slice(-lastN);
     return {
       points: sparklinePoints(series, width, height, 1, MIN_RANGE_RATIO),
-      isUp: series.length > 1 && series[series.length - 1] >= series[0],
+      endpointsUp: series.length > 1 && series[series.length - 1] >= series[0],
     };
   }, [prices, lastN, width, height]);
 
   if (!points) return null;
+
+  const isUp = isUpOverride ?? endpointsUp;
 
   return (
     <Svg width={width} height={height} pointerEvents="none" accessible={false}>

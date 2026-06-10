@@ -55,7 +55,12 @@ export const AssetRow = memo(function AssetRow({
         <Text className="font-semibold">{name}</Text>
         <Text variant="muted">{holding}</Text>
       </View>
-      {sparkline7d && <Sparkline prices={sparkline7d} />}
+      {sparkline7d && (
+        <Sparkline
+          prices={sparkline7d}
+          isUp={changePct24h !== undefined ? changePct24h >= 0 : undefined}
+        />
+      )}
       <View className="items-end gap-0.5">
         <Text className="font-semibold">{value}</Text>
         {changePct24h !== undefined && (
