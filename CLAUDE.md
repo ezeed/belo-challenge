@@ -48,6 +48,14 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Hooks: `use-<name>.ts` (kebab-case), owned by `features/<feature>/hooks/` or their `lib/<module>/`. No global hooks directory.
 - Aliases: `@/*` → `./src/*` · `@/assets/*` → `./assets/*`.
 
+## State & data
+
+- TanStack Query = server state (prices, history). Zustand = client state. Never cross the two.
+- Data layer: `PriceRepository` (`getMarkets(ids)`, `getMarketChart(id)`) in `src/lib/api/`; implementations swap behind `getPriceRepository()`. Current: mock (captured CoinGecko fixtures in `lib/api/fixtures/`).
+- API types (`src/lib/api/types.ts`) mirror CoinGecko snake_case verbatim, trimmed to consumed fields. No API→domain mapping layer — documented README trade-off.
+- `queryClient`: `src/lib/query/`, `staleTime` 60s; `QueryClientProvider` mounted in the root layout.
+- Server-state hooks live in `features/coins/hooks/` (`useMarkets` — one batched markets query).
+
 ## Theming
 
 - Components use semantic Tailwind classes (`bg-primary`, `text-text-muted`). No raw hex.
