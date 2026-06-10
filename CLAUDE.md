@@ -10,7 +10,7 @@ Keep this file updated: every feature added appends its definitions/rules to the
 - Install: `bun install` · Native modules: `bunx expo install <pkg>` (never `bun add`)
 - Run: `bun run ios`
 - Typecheck: `bun run typecheck` · Lint: `bun run lint` · Format: `bun run format`
-- Test: `bun test`
+- Test: `bun run test` (Jest via jest-expo — `bun test` invokes bun's own runner, do not use)
 
 ## Requirements
 
@@ -32,6 +32,10 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Buy/Sell price = spread pair: `sell = mid × (1 − s)` · `buy = mid × (1 + s)`.
 - Swap conversion: from-asset @ sell → USD → to-asset @ buy.
 - Assets: USDT, USDC, DAI, BTC, ETH. USD = unit of account, not an asset.
+- Asset catalog, `CoinId`, `Holdings = Record<CoinId, number>`, seed balances: `src/features/shared/assets.ts`.
+- `Transaction` record: id · timestamp (ms) · fromId/toId · fromAmount/toAmount · usdValue · rate · feeUsd (`src/features/shared/transaction.ts`).
+- Money math: big.js via `big()` from `src/features/shared/money.ts`; construct from string for precision. No float arithmetic on balances.
+- Money display: `formatUsd` / `formatAmount` / `formatPercent` (Intl-based, locale param).
 
 ## Architecture
 
@@ -41,6 +45,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - `src/features/<feature>/` = business logic; public API via `index.ts` barrel; cross-feature imports through barrels only.
 - `src/features/shared/` = domain logic used by 2+ features.
 - Pure logic: co-located `*.ts` + `*.test.ts`.
+- Hooks: `use-<name>.ts` (kebab-case), owned by `features/<feature>/hooks/` or their `lib/<module>/`. No global hooks directory.
 - Aliases: `@/*` → `./src/*` · `@/assets/*` → `./assets/*`.
 
 ## Theming
