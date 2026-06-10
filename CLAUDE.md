@@ -3,6 +3,8 @@
 Crypto-wallet swap simulator. Expo SDK 56 dev build (never Expo Go) · TypeScript strict · bun.
 Expo API reference: https://docs.expo.dev/versions/v56.0.0/
 
+Keep this file updated: every feature added appends its definitions/rules to the relevant section.
+
 ## Commands
 
 - Install: `bun install` · Native modules: `bunx expo install <pkg>` (never `bun add`)
