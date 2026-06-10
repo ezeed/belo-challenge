@@ -1,13 +1,22 @@
+import { createCoinGeckoRepository } from './coingecko-repository';
+import { activeApiKey } from './mock-mode';
 import { createMockRepository } from './mock-repository';
 import type { PriceRepository } from './price-repository';
 
-let repository: PriceRepository | undefined;
+const instances: { mock?: PriceRepository; http?: PriceRepository } = {};
 
-/** Mock-only until T23 adds the CoinGecko http implementation + settings flag. */
 export function getPriceRepository(): PriceRepository {
-  repository ??= createMockRepository();
-  return repository;
+  const key = activeApiKey();
+  return key
+    ? (instances.http ??= createCoinGeckoRepository(key))
+    : (instances.mock ??= createMockRepository());
 }
 
+export {
+  hasApiKey,
+  isMockActive,
+  setMockMode,
+  useMockActive,
+} from './mock-mode';
 export type { PriceRepository } from './price-repository';
 export type { CoinMarket, MarketChart } from './types';

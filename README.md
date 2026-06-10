@@ -18,6 +18,16 @@ The alternative — modeling a full fake wallet backend with balances in the Tan
 was rejected: it creates two sources of truth (mock storage + query cache) and forces solving
 latency problems (invalidation, optimistic updates, rollback) that cannot occur locally.
 
+### Pull-to-refresh state: own flag in the feature hook, not the query's `isRefetching`
+
+TanStack Query can't distinguish _who_ triggered a fetch: `isRefetching` is true for every
+background refetch (mock-mode toggle invalidation, staleTime expiry, future polling). Binding it to
+`RefreshControl.refreshing` makes iOS animate the pull spinner in — pushing the list down — when the
+user never pulled. The pull spinner belongs exclusively to the pull gesture, so the feature hook
+(`usePortfolio`) owns a dedicated `isRefreshing` flag set only by its `refresh()` action, and the
+screen stays purely declarative. `isPending` has no such problem (first-load only) and maps to
+skeletons. This is the pattern for every screen with pull-to-refresh.
+
 ### 24h change color: no neutral state (deferred)
 
 The 24h % and the row sparkline color binary by the raw sign, while the displayed percentage is

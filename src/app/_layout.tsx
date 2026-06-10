@@ -1,6 +1,7 @@
 import '@/global.css';
 import '@/lib/i18n';
 
+import { useReactQueryDevTools } from '@dev-plugins/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 
@@ -34,6 +35,8 @@ const NAV_THEMES = {
 } as const;
 
 export default function RootLayout() {
+  // no-op outside dev — inspect queries via the dev menu's plugin entry
+  useReactQueryDevTools(queryClient);
   const { scheme } = useTheme();
 
   return (

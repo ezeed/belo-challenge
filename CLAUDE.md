@@ -11,6 +11,7 @@ Keep this file updated: every feature added appends its definitions/rules to the
 - Run: `bun run ios`
 - Typecheck: `bun run typecheck` · Lint: `bun run lint` · Format: `bun run format`
 - Test: `bun run test` (Jest via jest-expo — `bun test` invokes bun's own runner, do not use)
+- Query inspection: `@dev-plugins/react-query` (RN DevTools Network tab is dead in dev builds — multi-host limitation); open via `shift+m` in the expo CLI or the in-app dev menu.
 
 ## Requirements
 
@@ -54,11 +55,16 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - TanStack Query = server state (prices, history). Zustand = client state. Never cross the two.
 - Holdings: zustand store (`features/portfolio/store.ts`) = single source of truth; UI reads via selectors. Balances never enter the query cache.
 - Writes: UI never mutates the store directly — the swap goes through the API-shaped seam `executeSwap(params): Promise<Transaction>` (`features/swap/swap-service.ts`), consumed via `useMutation`; sync/local inside, HTTP-swappable later. Store exposes no public setters.
-- Data layer: `PriceRepository` (`getMarkets(ids)`, `getMarketChart(id)`) in `src/lib/api/`; implementations swap behind `getPriceRepository()`. Current: mock (captured CoinGecko fixtures in `lib/api/fixtures/`).
+- Data layer: `PriceRepository` (`getMarkets(ids)`, `getMarketChart(id)`) in `src/lib/api/`; implementations swap behind `getPriceRepository()`: mock (captured fixtures in `lib/api/fixtures/`) ⇄ http (`coingecko-repository.ts`, one batched `/coins/markets` call — never coin-by-coin).
+- Repository selection: `useMock = mockMode || !apiKey` — key from `EXPO_PUBLIC_COINGECKO_API_KEY` (`.env`, gitignored); mock mode = zustand store in `lib/api/mock-mode.ts` (session-only); the Settings toggle must `queryClient.invalidateQueries()` after switching; keyless → toggle disabled, mock forced.
+- Mock-mode reads: UI uses `useMockActive()` (reactive — badge, switch); data layer uses `isMockActive()`/`activeApiKey()` (snapshot). Never read a non-reactive flag during render.
+- API errors: typed `ApiError` with code union `RATE_LIMIT | NETWORK_ERROR | TIMEOUT | SERVER_ERROR | UNKNOWN` (`src/lib/errors/`); never surface raw fetch errors.
+- Query retry policy (queryClient defaults): transient codes only, max 3, exponential backoff capped 30s; 429 `Retry-After` overrides the backoff delay.
 - API types (`src/lib/api/types.ts`) mirror CoinGecko snake_case verbatim, trimmed to consumed fields. No API→domain mapping layer — documented README trade-off.
 - `queryClient`: `src/lib/query/`, `staleTime` 60s; `QueryClientProvider` mounted in the root layout.
 - Server-state hooks live in `features/coins/hooks/` (`useMarkets` — one batched markets query).
 - Client/server state join at render only, via feature hooks (`usePortfolio` — holdings × prices → rows + total; row props kept primitive for `memo`).
+- Pull-to-refresh: feature hooks own a dedicated `isRefreshing` + `refresh()` (set only by the pull gesture) — never bind `RefreshControl.refreshing` to the query's `isRefetching` (background refetches would animate the spinner in). Screens stay declarative.
 - Fixed 5-asset list = `FlatList` + memoized rows (deliberately not FlashList — README trade-off). Virtualize only growable lists.
 
 ## i18n

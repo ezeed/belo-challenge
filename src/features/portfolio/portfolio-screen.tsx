@@ -1,10 +1,17 @@
 import { ArrowDownWideNarrow, ArrowUpNarrowWide } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, Pressable, View, type ListRenderItem } from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  View,
+  type ListRenderItem,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/text';
+import { useMockActive } from '@/lib/api';
 import { useTheme } from '@/lib/theme';
 
 import { AssetRowSkeleton } from './components/asset-row-skeleton';
@@ -22,7 +29,9 @@ export function PortfolioScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [sort, setSort] = useState<SortDirection>('desc');
-  const { rows, totalUsd, isPending } = usePortfolio(sort);
+  const { rows, totalUsd, isPending, isRefreshing, refresh } =
+    usePortfolio(sort);
+  const mockActive = useMockActive();
 
   const isDesc = sort === 'desc';
   const SortIcon = isDesc ? ArrowDownWideNarrow : ArrowUpNarrowWide;
@@ -51,9 +60,23 @@ export function PortfolioScreen() {
           renderItem={renderItem}
           className="px-6"
           contentContainerClassName="gap-3 pb-6"
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={refresh}
+              tintColor={colors.textMuted}
+            />
+          }
           ListHeaderComponent={
             <View className="gap-4 pb-1 pt-4">
-              <Text variant="h3">{t('portfolio.title')}</Text>
+              <View className="flex-row items-center justify-between">
+                <Text variant="h3">{t('portfolio.title')}</Text>
+                {mockActive && (
+                  <View className="rounded-full bg-surface-muted px-3 py-1">
+                    <Text variant="muted">{t('common.mockBadge')}</Text>
+                  </View>
+                )}
+              </View>
               <BalanceCard totalUsd={totalUsd} isLoading={isPending} />
               <View className="flex-row items-center justify-between">
                 <Text variant="large">{t('portfolio.assets')}</Text>

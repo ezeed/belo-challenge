@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { useMarkets } from '@/features/coins';
 import {
@@ -30,7 +30,19 @@ export interface PortfolioRow {
 /** Holdings (client state) × market prices (server state), joined at render. */
 export function usePortfolio(sort: SortDirection) {
   const holdings = usePortfolioStore((state) => state.holdings);
-  const { data: markets, isPending } = useMarkets();
+  const { data: markets, isPending, refetch } = useMarkets();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Pull-gesture state only — deliberately not the query's `isRefetching`,
+  // which would also animate the spinner in on background refetches.
+  const refresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [refetch]);
 
   const totalUsd = useMemo(() => {
     const prices: PriceMap = Object.fromEntries(
@@ -57,5 +69,5 @@ export function usePortfolio(sort: SortDirection) {
     }).sort((a, b) => factor * big(a.valueUsd).cmp(b.valueUsd));
   }, [holdings, markets, sort]);
 
-  return { rows, totalUsd, isPending };
+  return { rows, totalUsd, isPending, isRefreshing, refresh };
 }

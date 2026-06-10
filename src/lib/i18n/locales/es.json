@@ -5,7 +5,14 @@
       "swap": "Swap",
       "settings": "Ajustes"
     },
-    "comingSoon": "Próximamente"
+    "comingSoon": "Próximamente",
+    "mockBadge": "Datos de prueba"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "mockMode": "Modo de prueba",
+    "mockModeHint": "Usa datos locales de ejemplo en lugar de precios en vivo",
+    "mockModeNoKey": "Sin clave de API — los datos de prueba están siempre activos"
   },
   "portfolio": {
     "title": "Portafolio",

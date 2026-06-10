@@ -5,7 +5,14 @@
       "swap": "Swap",
       "settings": "Settings"
     },
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "mockBadge": "Mock data"
+  },
+  "settings": {
+    "title": "Settings",
+    "mockMode": "Mock mode",
+    "mockModeHint": "Use bundled fixture data instead of live prices",
+    "mockModeNoKey": "No API key found — mock data is always on"
   },
   "portfolio": {
     "title": "Portfolio",
