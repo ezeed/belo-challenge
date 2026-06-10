@@ -1,4 +1,5 @@
 import '@/global.css';
+import '@/lib/i18n';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';

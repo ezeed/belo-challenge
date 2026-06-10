@@ -1,0 +1,17 @@
+{
+  "common": {
+    "tabs": {
+      "home": "Home",
+      "swap": "Swap",
+      "settings": "Settings"
+    },
+    "comingSoon": "Coming soon"
+  },
+  "demo": {
+    "title": "Theme tokens",
+    "toggleTheme": "Toggle color scheme",
+    "textOnSurface": "Text on surface",
+    "mutedText": "Muted text",
+    "primaryButton": "Primary — indigo (light) / mint (dark)"
+  }
+}

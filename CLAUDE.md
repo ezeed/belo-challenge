@@ -56,6 +56,14 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - `queryClient`: `src/lib/query/`, `staleTime` 60s; `QueryClientProvider` mounted in the root layout.
 - Server-state hooks live in `features/coins/hooks/` (`useMarkets` — one batched markets query).
 
+## i18n
+
+- i18next + react-i18next; init in `src/lib/i18n/` (side-effect import in the root layout).
+- Languages: `en`, `es`; default from device locale (expo-localization), fallback `en`.
+- Resources: `src/lib/i18n/locales/{en,es}.json` — keys namespaced by feature, single `translation` namespace, typed via `i18next.d.ts`.
+- All user-facing strings through `t('...')`. No hardcoded strings.
+- Numbers/currency: `features/shared/money.ts` Intl helpers, never i18next formatting.
+
 ## Theming
 
 - Components use semantic Tailwind classes (`bg-primary`, `text-text-muted`). No raw hex.

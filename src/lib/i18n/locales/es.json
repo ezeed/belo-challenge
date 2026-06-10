@@ -1,0 +1,17 @@
+{
+  "common": {
+    "tabs": {
+      "home": "Inicio",
+      "swap": "Swap",
+      "settings": "Ajustes"
+    },
+    "comingSoon": "Próximamente"
+  },
+  "demo": {
+    "title": "Tokens de tema",
+    "toggleTheme": "Cambiar tema de color",
+    "textOnSurface": "Texto sobre superficie",
+    "mutedText": "Texto atenuado",
+    "primaryButton": "Primario — índigo (claro) / menta (oscuro)"
+  }
+}
