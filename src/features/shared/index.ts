@@ -15,3 +15,4 @@ export {
   type Numeric,
 } from './money';
 export { type Transaction } from './transaction';
+export { valueAsset, valuePortfolio, type PriceMap } from './value-portfolio';

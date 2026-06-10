@@ -7,11 +7,12 @@
     },
     "comingSoon": "Próximamente"
   },
-  "demo": {
-    "title": "Tokens de tema",
-    "toggleTheme": "Cambiar tema de color",
-    "textOnSurface": "Texto sobre superficie",
-    "mutedText": "Texto atenuado",
-    "primaryButton": "Primario — índigo (claro) / menta (oscuro)"
+  "portfolio": {
+    "title": "Portafolio",
+    "totalBalance": "Balance total",
+    "assets": "Activos",
+    "sortByValue": "Ordenar por valor en USD",
+    "ascending": "Ascendente",
+    "descending": "Descendente"
   }
 }

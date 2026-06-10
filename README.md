@@ -1,3 +1,25 @@
+# belo-challenge
+
+## Design decisions
+
+<!-- Section grows as decisions land; full README rewrite happens in T22. -->
+
+### Balances: local state behind an API-shaped seam
+
+In the real product, balances are server state — the backend executes a swap and returns new
+holdings. This simulator keeps holdings in a Zustand store (single source of truth: sync reads,
+trivial persistence, no cache-invalidation choreography for state that can't actually go stale),
+but the UI never mutates it directly. The app's only write goes through an async, service-shaped
+boundary — `executeSwap(params): Promise<Transaction>` — consumed via `useMutation`, so screens are
+already coded against pending/error states and a `Promise`-based contract. Plugging in a real
+backend later means reimplementing one function, not reworking the screens.
+
+The alternative — modeling a full fake wallet backend with balances in the TanStack Query cache —
+was rejected: it creates two sources of truth (mock storage + query cache) and forces solving
+latency problems (invalidation, optimistic updates, rollback) that cannot occur locally.
+
+---
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).

@@ -1,6 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  // dev-only crutch: metro serves stale compiled CSS for classes new to the
+  // codebase (hot reload misses them) — pre-generate the families tweaked most
+  safelist:
+    process.env.NODE_ENV === 'development'
+      ? [
+          { pattern: /^(p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap)-\d+(\.\d+)?$/ },
+          { pattern: /^(h|w)-\d+(\.\d+)?$/ },
+          { pattern: /^rounded(-(sm|md|lg|xl|2xl|3xl|full))?$/ },
+          { pattern: /^text-(xs|sm|base|lg|xl|[2-6]xl)$/ },
+        ]
+      : [],
   presets: [require('nativewind/preset')],
   darkMode: 'class',
   theme: {
