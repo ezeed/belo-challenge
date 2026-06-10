@@ -1,2 +1,2 @@
 export { PortfolioScreen } from './portfolio-screen';
-export { usePortfolioStore } from './store';
+export { applySwap, resetPortfolio, usePortfolioStore } from './store';

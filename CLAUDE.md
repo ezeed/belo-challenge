@@ -53,7 +53,9 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 ## State & data
 
 - TanStack Query = server state (prices, history). Zustand = client state. Never cross the two.
-- Holdings: zustand store (`features/portfolio/store.ts`) = single source of truth; UI reads via selectors. Balances never enter the query cache.
+- Holdings: zustand store (`features/portfolio/store.ts`) = single source of truth (holdings + transactions); UI reads via selectors. Balances never enter the query cache.
+- Persistence: MMKV via `zustandStorage` adapter (`src/lib/storage/`) + zustand `persist` (sync rehydration — no hydration flash). Persisted stores: portfolio, notifications (`features/notifications/store.ts`), settings (theme/language), privacy. Session-only by design: mock mode.
+- Store actions = exported module functions (`applySwap`, `resetPortfolio`, `addNotification`, `setTheme`…), never setters on the hook. `applySwap` is swap-service-only; holdings math via pure `applySwapToHoldings` (`features/portfolio/apply-swap.ts`).
 - Writes: UI never mutates the store directly — the swap goes through the API-shaped seam `executeSwap(params): Promise<Transaction>` (`features/swap/swap-service.ts`), consumed via `useMutation`; sync/local inside, HTTP-swappable later. Store exposes no public setters.
 - Amount privacy: `usePrivacyStore` + `toggleHideAmounts` + `MASKED_AMOUNT` (`features/shared/privacy-store.ts`, session-only). Every monetary amount renders `MASKED_AMOUNT` when `hideAmounts`; percentages/sparklines stay visible. Eye toggle lives on the balance card.
 - Data layer: `PriceRepository` (`getMarkets(ids)`, `getMarketChart(id)`) in `src/lib/api/`; implementations swap behind `getPriceRepository()`: mock (captured fixtures in `lib/api/fixtures/`) ⇄ http (`coingecko-repository.ts`, one batched `/coins/markets` call — never coin-by-coin).
