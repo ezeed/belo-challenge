@@ -1,7 +1,7 @@
 {
   "common": {
     "tabs": {
-      "home": "Inicio",
+      "portfolio": "Portafolio",
       "swap": "Swap",
       "settings": "Ajustes"
     },
@@ -12,7 +12,15 @@
     "title": "Ajustes",
     "mockMode": "Modo de prueba",
     "mockModeHint": "Usa datos locales de ejemplo en lugar de precios en vivo",
-    "mockModeNoKey": "Sin clave de API — los datos de prueba están siempre activos"
+    "mockModeNoKey": "Sin clave de API — los datos de prueba están siempre activos",
+    "theme": "Tema",
+    "themeSystem": "Sistema",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "language": "Idioma",
+    "languageSystem": "Sistema",
+    "languageEn": "English",
+    "languageEs": "Español"
   },
   "portfolio": {
     "title": "Portafolio",

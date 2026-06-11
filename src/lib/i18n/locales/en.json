@@ -1,7 +1,7 @@
 {
   "common": {
     "tabs": {
-      "home": "Home",
+      "portfolio": "Portfolio",
       "swap": "Swap",
       "settings": "Settings"
     },
@@ -12,7 +12,15 @@
     "title": "Settings",
     "mockMode": "Mock mode",
     "mockModeHint": "Use bundled fixture data instead of live prices",
-    "mockModeNoKey": "No API key found — mock data is always on"
+    "mockModeNoKey": "No API key found — mock data is always on",
+    "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "language": "Language",
+    "languageSystem": "System",
+    "languageEn": "English",
+    "languageEs": "Español"
   },
   "portfolio": {
     "title": "Portfolio",

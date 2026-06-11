@@ -77,6 +77,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Resources: `src/lib/i18n/locales/{en,es}.json` — keys namespaced by feature, single `translation` namespace, typed via `i18next.d.ts`.
 - All user-facing strings through `t('...')`. No hardcoded strings.
 - Numbers/currency: `features/shared/money.ts` Intl helpers, never i18next formatting.
+- Language preference: persisted in `features/settings/store.ts` (`null` = follow device); the settings `LanguageCard` calls `i18n.changeLanguage`, and the root layout re-applies it on launch. Language autonyms (`English`, `Español`) stay untranslated across locales.
 
 ## Theming
 
@@ -84,6 +85,8 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Token sources kept in sync: `src/global.css` (HSL vars) ↔ `tailwind.config.js` ↔ `src/lib/theme/colors.ts` (raw hex).
 - `primary` = belo-indigo (light) / belo-mint (dark). `bg-primary` pairs with `text-primary-foreground`.
 - Native-prop consumers (NativeTabs, navigation theme): `useTheme().colors` from `@/lib/theme`.
+- Selected/active states that need the primary brand color (segmented picker, mock badge, Switch `trackColor`): use `useTheme().colors` inline `style`, not `bg-primary`/`border-primary` classes — CSS-var color classes resolve unreliably in RN. Tint = 8-digit hex (`${colors.primary}1F`).
+- Theme preference: persisted in `features/settings/store.ts` (`system`/`light`/`dark`); the settings `ThemeCard` drives `setColorScheme`, and the root layout re-applies it on launch. `system` defers to nativewind/device.
 - Visual changes: verify light and dark.
 - `components/ui/` primitives: pull via `bunx @react-native-reusables/cli@latest add <name>` (copied source, owned in-repo). On arrival translate shadcn tokens → ours: `foreground→text` · `muted-foreground→text-muted` · `card→surface` · `muted`/`accent→surface-muted` · `destructive→danger`.
 - Text: use `Text` from `@/components/ui/text` (cva variants), not RN `Text`.
@@ -91,7 +94,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 ## Navigation
 
 - NativeTabs (`expo-router/unstable-native-tabs`) in `src/components/app-tabs.tsx`.
-- Tabs: Home (`index`) · Swap · Settings.
+- Tabs: Portfolio (`index`) · Swap · Settings.
 - Tab icons: SF Symbols (`sf`) + Material (`md`). Lucide for in-screen icons.
 
 ## Charts

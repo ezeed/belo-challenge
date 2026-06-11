@@ -20,11 +20,11 @@ export default function AppTabs() {
     >
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Label>
-          {t('common.tabs.home')}
+          {t('common.tabs.portfolio')}
         </NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          sf={{ default: 'house', selected: 'house.fill' }}
-          md="home"
+          sf={{ default: 'briefcase', selected: 'briefcase.fill' }}
+          md="work"
         />
       </NativeTabs.Trigger>
 

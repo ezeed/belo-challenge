@@ -1,11 +1,13 @@
 import '@/global.css';
-import '@/lib/i18n';
 
 import { useReactQueryDevTools } from '@dev-plugins/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
+import { useEffect } from 'react';
 
 import AppTabs from '@/components/app-tabs';
+import { useSettingsStore } from '@/features/settings';
+import { i18n } from '@/lib/i18n';
 import { queryClient } from '@/lib/query';
 import { THEME, useTheme } from '@/lib/theme';
 
@@ -37,7 +39,13 @@ const NAV_THEMES = {
 export default function RootLayout() {
   // no-op outside dev — inspect queries via the dev menu's plugin entry
   useReactQueryDevTools(queryClient);
-  const { scheme } = useTheme();
+  const { scheme, setColorScheme } = useTheme();
+
+  useEffect(() => {
+    const { theme, language } = useSettingsStore.getState();
+    setColorScheme(theme);
+    if (language) void i18n.changeLanguage(language);
+  }, [setColorScheme]);
 
   return (
     <QueryClientProvider client={queryClient}>

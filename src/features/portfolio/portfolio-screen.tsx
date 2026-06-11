@@ -72,8 +72,13 @@ export function PortfolioScreen() {
               <View className="flex-row items-center justify-between">
                 <Text variant="h3">{t('portfolio.title')}</Text>
                 {mockActive && (
-                  <View className="rounded-full bg-surface-muted px-3 py-1">
-                    <Text variant="muted">{t('common.mockBadge')}</Text>
+                  <View
+                    style={{ backgroundColor: `${colors.primary}1F` }}
+                    className="rounded-full px-3 py-1"
+                  >
+                    <Text variant="muted" style={{ color: colors.primary }}>
+                      {t('common.mockBadge')}
+                    </Text>
                   </View>
                 )}
               </View>
