@@ -57,15 +57,15 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Persistence: MMKV via `zustandStorage` adapter (`src/lib/storage/`) + zustand `persist` (sync rehydration — no hydration flash). Persisted stores: portfolio, notifications (`features/notifications/store.ts`), settings (theme/language), privacy. Session-only by design: mock mode.
 - Store actions = exported module functions (`applySwap`, `resetPortfolio`, `addNotification`, `setTheme`…), never setters on the hook. `applySwap` is swap-service-only; holdings math via pure `applySwapToHoldings` (`features/portfolio/apply-swap.ts`).
 - Writes: UI never mutates the store directly — the swap goes through the API-shaped seam `executeSwap(params): Promise<Transaction>` (`features/swap/swap-service.ts`), consumed via `useMutation`; sync/local inside, HTTP-swappable later. Store exposes no public setters.
-- Amount privacy: `usePrivacyStore` + `toggleHideAmounts` + `MASKED_AMOUNT` (`features/shared/privacy-store.ts`, session-only). Every monetary amount renders `MASKED_AMOUNT` when `hideAmounts`; percentages/sparklines stay visible. Eye toggle lives on the balance card.
+- Amount privacy: `usePrivacyStore` + `toggleHideAmounts` + `MASKED_AMOUNT` (`features/shared/privacy-store.ts`, persisted). Free-Range extra (not in the brief) — list under README extras. Every monetary amount renders `MASKED_AMOUNT` when `hideAmounts`; percentages/sparklines stay visible. Eye toggle lives on the balance card.
 - Data layer: `PriceRepository` (`getMarkets(ids)`, `getMarketChart(id)`) in `src/lib/api/`; implementations swap behind `getPriceRepository()`: mock (captured fixtures in `lib/api/fixtures/`) ⇄ http (`coingecko-repository.ts`, one batched `/coins/markets` call — never coin-by-coin).
 - Repository selection: `useMock = mockMode || !apiKey` — key from `EXPO_PUBLIC_COINGECKO_API_KEY` (`.env`, gitignored); mock mode = zustand store in `lib/api/mock-mode.ts` (session-only); the Settings toggle must `queryClient.invalidateQueries()` after switching; keyless → toggle disabled, mock forced.
 - Mock-mode reads: UI uses `useMockActive()` (reactive — badge, switch); data layer uses `isMockActive()`/`activeApiKey()` (snapshot). Never read a non-reactive flag during render.
 - API errors: typed `ApiError` with code union `RATE_LIMIT | NETWORK_ERROR | TIMEOUT | SERVER_ERROR | UNKNOWN` (`src/lib/errors/`); never surface raw fetch errors.
 - Query retry policy (queryClient defaults): transient codes only, max 3, exponential backoff capped 30s; 429 `Retry-After` overrides the backoff delay.
 - API types (`src/lib/api/types.ts`) mirror CoinGecko snake_case verbatim, trimmed to consumed fields. No API→domain mapping layer — documented README trade-off.
-- `queryClient`: `src/lib/query/`, `staleTime` 60s; `QueryClientProvider` mounted in the root layout.
-- Server-state hooks live in `features/coins/hooks/` (`useMarkets` — one batched markets query).
+- `queryClient`: `src/lib/query/`, `staleTime` 60s; `QueryClientProvider` mounted in the root layout. Query-cache disk persistence deliberately skipped — spec §6 persistence = client state (Zustand), and mock mode + retry cover the rate-limited cold start (README trade-off).
+- Server-state hooks live in `features/coins/hooks/` (`useMarkets` — one batched markets query; `placeholderData: keepPreviousData` keeps last good prices across refetch errors + mock-mode key changes).
 - Client/server state join at render only, via feature hooks (`usePortfolio` — holdings × prices → rows + total; row props kept primitive for `memo`).
 - Pull-to-refresh: feature hooks own a dedicated `isRefreshing` + `refresh()` (set only by the pull gesture) — never bind `RefreshControl.refreshing` to the query's `isRefetching` (background refetches would animate the spinner in). Screens stay declarative.
 - Fixed 5-asset list = `FlatList` + memoized rows (deliberately not FlashList — README trade-off). Virtualize only growable lists.
@@ -108,3 +108,4 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Styling: Tailwind classes only — no inline style objects. Third-party components get className via `cssInterop` wrappers in `components/ui/` (e.g. `Image`). If className is truly unsupported, `StyleSheet.create`.
 - Interactive elements: `accessibilityLabel` + `accessibilityRole`; support font scaling.
 - Commits: shortest possible message, no Co-Authored-By trailers.
+- Never commit or push automatically — after typecheck/lint/test pass, stop and wait for explicit manual confirmation before `git commit`/`git push`.
