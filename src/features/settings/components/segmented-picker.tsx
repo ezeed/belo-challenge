@@ -38,7 +38,10 @@ export function SegmentedPicker<T extends string>({
             onPress={() => onChange(opt.value)}
             style={
               selected
-                ? { backgroundColor: colors.primary, borderColor: colors.primary }
+                ? {
+                    backgroundColor: colors.primary,
+                    borderColor: colors.primary,
+                  }
                 : { borderColor: colors.border }
             }
             className="flex-1 items-center rounded-xl border bg-surface-muted py-2"

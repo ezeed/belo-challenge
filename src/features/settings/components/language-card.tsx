@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next';
 
 import { i18n } from '@/lib/i18n';
 
-import { setLanguage, useSettingsStore, type LanguagePreference } from '../store';
+import {
+  setLanguage,
+  useSettingsStore,
+  type LanguagePreference,
+} from '../store';
 import { SegmentedPicker, type SegmentOption } from './segmented-picker';
 import { SettingCard } from './setting-card';
 

@@ -5,7 +5,9 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Toaster } from 'sonner-native';
 
 import { useSettingsStore } from '@/features/settings';
 import { i18n } from '@/lib/i18n';
@@ -80,7 +82,20 @@ export default function RootLayout() {
                 headerBackButtonDisplayMode: 'minimal',
               }}
             />
+            <Stack.Screen
+              name="asset-picker"
+              options={{
+                headerShown: false,
+                gestureEnabled: true,
+                presentation: Platform.OS === 'ios' ? 'formSheet' : 'modal',
+                sheetGrabberVisible: true,
+                sheetAllowedDetents: 'fitToContents',
+                animation:
+                  Platform.OS === 'android' ? 'slide_from_bottom' : 'default',
+              }}
+            />
           </Stack>
+          <Toaster theme={scheme} />
         </ThemeProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>

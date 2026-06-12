@@ -109,7 +109,9 @@ export function CoinDetailScreen({ id }: CoinDetailScreenProps) {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={t('coin.convert')}
-              onPress={() => router.push({ pathname: '/swap', params: { from: id } })}
+              onPress={() =>
+                router.push({ pathname: '/swap', params: { from: id } })
+              }
               style={{ backgroundColor: colors.primary }}
               className="items-center rounded-2xl py-4 active:opacity-90"
             >

@@ -1,4 +1,8 @@
-import { ArrowDownWideNarrow, ArrowUpNarrowWide, Bell } from 'lucide-react-native';
+import {
+  ArrowDownWideNarrow,
+  ArrowUpNarrowWide,
+  Bell,
+} from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {

@@ -17,39 +17,57 @@ const HOLDINGS = {
 };
 
 function valid(fromAmount: string, fromId = 'bitcoin', toId = 'ethereum') {
-  return validateSwap({ fromId, toId, fromAmount, holdings: HOLDINGS, prices: PRICES });
+  return validateSwap({
+    fromId,
+    toId,
+    fromAmount,
+    holdings: HOLDINGS,
+    prices: PRICES,
+  });
 }
 
 describe('validateSwap', () => {
   describe('INVALID_AMOUNT', () => {
     it('rejects zero', () => {
       expect(valid('0').ok).toBe(false);
-      expect((valid('0') as { ok: false; error: string }).error).toBe('INVALID_AMOUNT');
+      expect((valid('0') as { ok: false; error: string }).error).toBe(
+        'INVALID_AMOUNT',
+      );
     });
 
     it('rejects negative amounts', () => {
       expect(valid('-1').ok).toBe(false);
-      expect((valid('-1') as { ok: false; error: string }).error).toBe('INVALID_AMOUNT');
+      expect((valid('-1') as { ok: false; error: string }).error).toBe(
+        'INVALID_AMOUNT',
+      );
     });
 
     it('rejects NaN string', () => {
       expect(valid('NaN').ok).toBe(false);
-      expect((valid('NaN') as { ok: false; error: string }).error).toBe('INVALID_AMOUNT');
+      expect((valid('NaN') as { ok: false; error: string }).error).toBe(
+        'INVALID_AMOUNT',
+      );
     });
 
     it('rejects empty string', () => {
       expect(valid('').ok).toBe(false);
-      expect((valid('') as { ok: false; error: string }).error).toBe('INVALID_AMOUNT');
+      expect((valid('') as { ok: false; error: string }).error).toBe(
+        'INVALID_AMOUNT',
+      );
     });
 
     it('rejects non-numeric string', () => {
       expect(valid('abc').ok).toBe(false);
-      expect((valid('abc') as { ok: false; error: string }).error).toBe('INVALID_AMOUNT');
+      expect((valid('abc') as { ok: false; error: string }).error).toBe(
+        'INVALID_AMOUNT',
+      );
     });
 
     it('rejects Infinity-like strings', () => {
       expect(valid('Infinity').ok).toBe(false);
-      expect((valid('Infinity') as { ok: false; error: string }).error).toBe('INVALID_AMOUNT');
+      expect((valid('Infinity') as { ok: false; error: string }).error).toBe(
+        'INVALID_AMOUNT',
+      );
     });
   });
 
@@ -89,7 +107,9 @@ describe('validateSwap', () => {
         prices: { ethereum: 3000 },
       });
       expect(result.ok).toBe(false);
-      expect((result as { ok: false; error: string }).error).toBe('MISSING_PRICE');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'MISSING_PRICE',
+      );
     });
 
     it('rejects when toId price is missing', () => {
@@ -101,7 +121,9 @@ describe('validateSwap', () => {
         prices: { bitcoin: 60000 },
       });
       expect(result.ok).toBe(false);
-      expect((result as { ok: false; error: string }).error).toBe('MISSING_PRICE');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'MISSING_PRICE',
+      );
     });
 
     it('rejects when both prices are missing', () => {
@@ -113,7 +135,9 @@ describe('validateSwap', () => {
         prices: {},
       });
       expect(result.ok).toBe(false);
-      expect((result as { ok: false; error: string }).error).toBe('MISSING_PRICE');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'MISSING_PRICE',
+      );
     });
   });
 
@@ -122,7 +146,7 @@ describe('validateSwap', () => {
       // BTC sell price = 60000 * 0.995 = 59700
       // 1 USD = 1/59700 BTC ~ 0.00001675...
       // Amount just under the minimum
-      const justUnder = (1 / (60000 * 0.995) * 0.99).toFixed(10);
+      const justUnder = ((1 / (60000 * 0.995)) * 0.99).toFixed(10);
       const result = validateSwap({
         fromId: 'bitcoin',
         toId: 'ethereum',
@@ -131,7 +155,9 @@ describe('validateSwap', () => {
         prices: PRICES,
       });
       expect(result.ok).toBe(false);
-      expect((result as { ok: false; error: string }).error).toBe('BELOW_MINIMUM');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'BELOW_MINIMUM',
+      );
     });
 
     it('accepts amounts exactly at or above 1 USD equivalent', () => {
@@ -159,7 +185,9 @@ describe('validateSwap', () => {
         prices: PRICES,
       });
       expect(result.ok).toBe(false);
-      expect((result as { ok: false; error: string }).error).toBe('BELOW_MINIMUM');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'BELOW_MINIMUM',
+      );
     });
 
     it('accepts stablecoin amount above minimum', () => {
@@ -184,7 +212,9 @@ describe('validateSwap', () => {
         prices: PRICES,
       });
       expect(result.ok).toBe(false);
-      expect((result as { ok: false; error: string }).error).toBe('INSUFFICIENT_FUNDS');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'INSUFFICIENT_FUNDS',
+      );
     });
 
     it('accepts exact balance (full sweep)', () => {
@@ -218,7 +248,9 @@ describe('validateSwap', () => {
         prices: PRICES,
       });
       expect(result.ok).toBe(false);
-      expect((result as { ok: false; error: string }).error).toBe('INSUFFICIENT_FUNDS');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'INSUFFICIENT_FUNDS',
+      );
     });
   });
 
@@ -259,7 +291,9 @@ describe('validateSwap', () => {
         holdings: HOLDINGS,
         prices: PRICES,
       });
-      expect((result as { ok: false; error: string }).error).toBe('INVALID_AMOUNT');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'INVALID_AMOUNT',
+      );
     });
 
     it('SAME_ASSET before MISSING_PRICE', () => {
@@ -281,7 +315,9 @@ describe('validateSwap', () => {
         holdings: HOLDINGS,
         prices: {},
       });
-      expect((result as { ok: false; error: string }).error).toBe('MISSING_PRICE');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'MISSING_PRICE',
+      );
     });
 
     it('BELOW_MINIMUM before INSUFFICIENT_FUNDS', () => {
@@ -293,7 +329,9 @@ describe('validateSwap', () => {
         holdings: { bitcoin: 0 },
         prices: PRICES,
       });
-      expect((result as { ok: false; error: string }).error).toBe('BELOW_MINIMUM');
+      expect((result as { ok: false; error: string }).error).toBe(
+        'BELOW_MINIMUM',
+      );
     });
   });
 });

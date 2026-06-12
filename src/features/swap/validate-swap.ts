@@ -42,11 +42,15 @@ export interface ValidateSwapParams {
  *  4. BELOW_MINIMUM   -- fromAmount x sellPrice < MIN_SWAP_USD (1 USD)
  *  5. INSUFFICIENT_FUNDS -- fromAmount > holdings[fromId]
  */
-export function validateSwap(
-  params: ValidateSwapParams,
-): SwapValidationResult {
-  const { fromId, toId, fromAmount, holdings, prices, spread = DEFAULT_SPREAD } =
-    params;
+export function validateSwap(params: ValidateSwapParams): SwapValidationResult {
+  const {
+    fromId,
+    toId,
+    fromAmount,
+    holdings,
+    prices,
+    spread = DEFAULT_SPREAD,
+  } = params;
 
   // 1. Validate the amount is a parseable, positive, finite number.
   let amount;

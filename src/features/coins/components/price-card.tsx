@@ -40,9 +40,7 @@ export function PriceCard({
           {changePct24h !== undefined && (
             <Text
               className={
-                changePct24h >= 0
-                  ? 'pb-1 text-positive'
-                  : 'pb-1 text-danger'
+                changePct24h >= 0 ? 'pb-1 text-positive' : 'pb-1 text-danger'
               }
             >
               {formatPercent(changePct24h, locale)}

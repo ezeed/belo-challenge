@@ -137,9 +137,7 @@ describe('calculateSwap', () => {
     });
 
     it('throws when both prices are missing', () => {
-      expect(() =>
-        calculateSwap('bitcoin', 'ethereum', '1', {}),
-      ).toThrow();
+      expect(() => calculateSwap('bitcoin', 'ethereum', '1', {})).toThrow();
     });
   });
 

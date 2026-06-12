@@ -60,11 +60,24 @@ export class SwapValidationError extends Error {
 export async function executeSwap(
   params: ExecuteSwapParams,
 ): Promise<Transaction> {
-  const { fromId, toId, fromAmount, prices, holdings, spread = DEFAULT_SPREAD } =
-    params;
+  const {
+    fromId,
+    toId,
+    fromAmount,
+    prices,
+    holdings,
+    spread = DEFAULT_SPREAD,
+  } = params;
 
   // Validate -- returns typed result, never throws
-  const validation = validateSwap({ fromId, toId, fromAmount, holdings, prices, spread });
+  const validation = validateSwap({
+    fromId,
+    toId,
+    fromAmount,
+    holdings,
+    prices,
+    spread,
+  });
   if (!validation.ok) {
     throw new SwapValidationError(validation.error);
   }

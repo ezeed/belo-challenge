@@ -23,6 +23,29 @@
   "notifications": {
     "title": "Notificaciones"
   },
+  "swap": {
+    "title": "Swap",
+    "from": "Desde",
+    "to": "Hacia",
+    "balance": "Saldo",
+    "max": "Máx",
+    "amount": "Monto a convertir",
+    "selectAsset": "Elegir activo",
+    "flip": "Invertir dirección",
+    "rate": "Tasa",
+    "value": "Valor",
+    "fee": "Comisión",
+    "confirm": "Convertir",
+    "successTitle": "Conversión completada",
+    "success": "Cambiaste {{from}} por {{to}}",
+    "errors": {
+      "invalidAmount": "Ingresa un monto válido",
+      "sameAsset": "Elige dos activos distintos",
+      "insufficientFunds": "Saldo insuficiente",
+      "belowMinimum": "El mínimo es {{min}}",
+      "missingPrice": "Precio no disponible — intenta más tarde"
+    }
+  },
   "settings": {
     "title": "Ajustes",
     "mockMode": "Modo de prueba",

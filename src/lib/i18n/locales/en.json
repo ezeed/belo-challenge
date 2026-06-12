@@ -23,6 +23,29 @@
   "notifications": {
     "title": "Notifications"
   },
+  "swap": {
+    "title": "Swap",
+    "from": "From",
+    "to": "To",
+    "balance": "Balance",
+    "max": "Max",
+    "amount": "Amount to swap",
+    "selectAsset": "Select asset",
+    "flip": "Switch direction",
+    "rate": "Rate",
+    "value": "Value",
+    "fee": "Fee",
+    "confirm": "Swap",
+    "successTitle": "Swap completed",
+    "success": "Swapped {{from}} for {{to}}",
+    "errors": {
+      "invalidAmount": "Enter a valid amount",
+      "sameAsset": "Choose two different assets",
+      "insufficientFunds": "Insufficient balance",
+      "belowMinimum": "Minimum swap is {{min}}",
+      "missingPrice": "Price unavailable — try again later"
+    }
+  },
   "settings": {
     "title": "Settings",
     "mockMode": "Mock mode",
