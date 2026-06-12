@@ -58,6 +58,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Persistence: MMKV via `zustandStorage` adapter (`src/lib/storage/`) + zustand `persist` (sync rehydration — no hydration flash). Persisted stores: portfolio, notifications (`features/notifications/store.ts`), settings (theme/language), privacy. Session-only by design: mock mode.
 - Store actions = exported module functions (`applySwap`, `resetPortfolio`, `addNotification`, `setTheme`…), never setters on the hook. `applySwap` is swap-service-only; holdings math via pure `applySwapToHoldings` (`features/portfolio/apply-swap.ts`).
 - Writes: UI never mutates the store directly — the swap goes through the API-shaped seam `executeSwap(params): Promise<Transaction>` (`features/swap/swap-service.ts`), consumed via `useMutation`; sync/local inside, HTTP-swappable later. Store exposes no public setters.
+- Swap engine: pure `calculateSwap(fromId, toId, fromAmount, prices, spread?) → { toAmount, usdValue, rate, feeUsd }` (all Big) + `validateSwap` typed union `INVALID_AMOUNT | SAME_ASSET | INSUFFICIENT_FUNDS | BELOW_MINIMUM | MISSING_PRICE` (never throws; min = 1 USD at sell price) — `features/swap/`, pure modules import only `features/shared`. `executeSwap` throws `SwapValidationError` (`.code`) as the confirm-time race guard; `.toNumber()` only at the Transaction boundary; Transaction id = `"${Date.now()}-${random}"`. Notifications are T16's hook, not the service.
 - Amount privacy: `usePrivacyStore` + `toggleHideAmounts` + `MASKED_AMOUNT` (`features/shared/privacy-store.ts`, persisted). Free-Range extra (not in the brief) — list under README extras. Every monetary amount renders `MASKED_AMOUNT` when `hideAmounts`; percentages/sparklines stay visible. Eye toggle lives on the balance card.
 - Data layer: `PriceRepository` (`getMarkets(ids)`, `getMarketChart(id)`) in `src/lib/api/`; implementations swap behind `getPriceRepository()`: mock (captured fixtures in `lib/api/fixtures/`) ⇄ http (`coingecko-repository.ts`, one batched `/coins/markets` call — never coin-by-coin).
 - Repository selection: `useMock = mockMode || !apiKey` — key from `EXPO_PUBLIC_COINGECKO_API_KEY` (`.env`, gitignored); mock mode = zustand store in `lib/api/mock-mode.ts` (session-only); the Settings toggle must `queryClient.invalidateQueries()` after switching; keyless → toggle disabled, mock forced.
@@ -75,7 +76,8 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 
 ## i18n
 
-- i18next + react-i18next; init in `src/lib/i18n/` (side-effect import in the root layout).
+- i18next + react-i18next; init in `src/lib/i18n/` (side-effect import in the root layout). `intl-pluralrules` polyfill imported first — Hermes lacks `Intl.PluralRules`, which i18next v24+ requires for plural resolution.
+- Root-layout launch effect (re-apply persisted theme/language) is mount-once (`[]` deps, lint-disabled on purpose): nativewind's `setColorScheme` is unstable per render and the layout re-renders on language change (`useTranslation` Stack titles) — depending on it loops `changeLanguage` → re-render → effect → crash.
 - Languages: `en`, `es`; default from device locale (expo-localization), fallback `en`.
 - Resources: `src/lib/i18n/locales/{en,es}.json` — keys namespaced by feature, single `translation` namespace, typed via `i18next.d.ts`.
 - All user-facing strings through `t('...')`. No hardcoded strings.
@@ -108,6 +110,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 
 - Row sparkline: hand-rolled memoized `react-native-svg` polyline (`src/components/sparkline.tsx`), `chartUp`/`chartDown` from `useTheme().colors`. Default window: last 24 points of the hourly 7d series = 24h. Direction color: pass `isUp` from the same value displayed next to the chart (`price_change_percentage_24h`) — the lazily-refreshed sparkline series can contradict the live %; endpoints are only the fallback. Never mount a chart-lib component per list row.
 - Point normalization: pure `sparklinePoints(prices, width, height, padding?, minRangeRatio?)` (`src/components/sparkline-points.ts`); display-only math, big.js not required. `minRangeRatio` = range floor so stablecoin-tiny ranges render near-flat (component uses 0.005).
+- 24h chart: `PriceChart` (`features/coins/components/price-chart.tsx`) — wagmi-charts `LineChart` + `CursorCrosshair`, haptic on activate (expo-haptics). `useMarketChart(id)` (`features/coins/hooks/`) is the app's only per-coin query (`['market-chart', id]`, `keepPreviousData`). Scrub texts must sit inside `LineChart.Provider`; line color = same `isUp` rule as the sparkline. Crosshair `format` runs as a Reanimated worklet — no Intl/i18n inside; manual `$` formatting is a documented trade-off. `GestureHandlerRootView` wraps the root layout.
 
 ## Code style
 
