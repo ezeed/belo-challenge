@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
-/** Placeholder — swap simulator lands in T15/T16. */
+import { Text } from '@/components/ui/text';
+
+/** Placeholder — swap simulator lands in T15/T16, which consumes the `?from=<coinId>` param. */
 export default function SwapScreen() {
   const { t } = useTranslation();
 

@@ -1,4 +1,4 @@
-import { ArrowDownWideNarrow, ArrowUpNarrowWide } from 'lucide-react-native';
+import { ArrowDownWideNarrow, ArrowUpNarrowWide, Bell } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,6 +9,8 @@ import {
   type ListRenderItem,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { useRouter } from 'expo-router';
 
 import { Text } from '@/components/ui/text';
 import { useMockActive } from '@/lib/api';
@@ -28,6 +30,7 @@ const SKELETON_ROWS = [0, 1, 2, 3, 4];
 export function PortfolioScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const router = useRouter();
   const [sort, setSort] = useState<SortDirection>('desc');
   const { rows, totalUsd, isPending, isRefreshing, refresh } =
     usePortfolio(sort);
@@ -71,16 +74,27 @@ export function PortfolioScreen() {
             <View className="gap-4 pb-1 pt-4">
               <View className="flex-row items-center justify-between">
                 <Text variant="h3">{t('portfolio.title')}</Text>
-                {mockActive && (
-                  <View
-                    style={{ backgroundColor: `${colors.primary}1F` }}
-                    className="rounded-full px-3 py-1"
+                <View className="flex-row items-center gap-2">
+                  {mockActive && (
+                    <View
+                      style={{ backgroundColor: `${colors.primary}1F` }}
+                      className="rounded-full px-3 py-1"
+                    >
+                      <Text variant="muted" style={{ color: colors.primary }}>
+                        {t('common.mockBadge')}
+                      </Text>
+                    </View>
+                  )}
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={t('portfolio.notifications')}
+                    hitSlop={8}
+                    onPress={() => router.push('/notifications')}
+                    className="h-10 w-10 items-center justify-center rounded-full bg-surface-muted active:opacity-80"
                   >
-                    <Text variant="muted" style={{ color: colors.primary }}>
-                      {t('common.mockBadge')}
-                    </Text>
-                  </View>
-                )}
+                    <Bell size={18} color={colors.text} />
+                  </Pressable>
+                </View>
               </View>
               <BalanceCard totalUsd={totalUsd} isLoading={isPending} />
               <View className="flex-row items-center justify-between">

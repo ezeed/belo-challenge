@@ -93,9 +93,13 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 
 ## Navigation
 
+- Root Stack in `src/app/_layout.tsx` (providers + Stack); tabs group at `(tabs)/_layout.tsx` renders `app-tabs.tsx` with `headerShown: false`.
+- Route map: `(tabs)/index` (Portfolio) · `(tabs)/swap` (Swap, accepts `?from=<coinId>`) · `(tabs)/settings` · `coin/[id]` (pushed) · `notifications` (pushed from Portfolio bell).
 - NativeTabs (`expo-router/unstable-native-tabs`) in `src/components/app-tabs.tsx`.
 - Tabs: Portfolio (`index`) · Swap · Settings.
 - Tab icons: SF Symbols (`sf`) + Material (`md`). Lucide for in-screen icons.
+- Portfolio screen header: bell icon (Lucide `Bell`) → pushes `/notifications`.
+- Asset picker is NOT a route — it is a modal component owned by `features/swap/` (T15).
 
 ## Charts
 

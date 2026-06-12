@@ -8,6 +8,12 @@
     "comingSoon": "Coming soon",
     "mockBadge": "Mock data"
   },
+  "coin": {
+    "title": "Coin Detail"
+  },
+  "notifications": {
+    "title": "Notifications"
+  },
   "settings": {
     "title": "Settings",
     "mockMode": "Mock mode",
@@ -30,6 +36,7 @@
     "hideAmounts": "Hide amounts",
     "showAmounts": "Show amounts",
     "ascending": "Ascending",
-    "descending": "Descending"
+    "descending": "Descending",
+    "notifications": "Notifications"
   }
 }

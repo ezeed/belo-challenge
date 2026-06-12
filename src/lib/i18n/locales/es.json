@@ -8,6 +8,12 @@
     "comingSoon": "Próximamente",
     "mockBadge": "Datos de prueba"
   },
+  "coin": {
+    "title": "Detalle de moneda"
+  },
+  "notifications": {
+    "title": "Notificaciones"
+  },
   "settings": {
     "title": "Ajustes",
     "mockMode": "Modo de prueba",
@@ -30,6 +36,7 @@
     "hideAmounts": "Ocultar montos",
     "showAmounts": "Mostrar montos",
     "ascending": "Ascendente",
-    "descending": "Descendente"
+    "descending": "Descendente",
+    "notifications": "Notificaciones"
   }
 }
