@@ -17,7 +17,8 @@
     "min24h": "24h low",
     "yourBalance": "Your balance",
     "convert": "Convert",
-    "notFound": "Coin not found"
+    "notFound": "Coin not found",
+    "chartUnavailable": "Chart unavailable"
   },
   "notifications": {
     "title": "Notifications"

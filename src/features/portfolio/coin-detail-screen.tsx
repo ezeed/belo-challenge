@@ -4,7 +4,7 @@ import { Pressable, ScrollView, View } from 'react-native';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
-import { PriceCard, useCoinMarket } from '@/features/coins';
+import { PriceCard, PriceChart, useCoinMarket } from '@/features/coins';
 import {
   formatAmount,
   formatUsd,
@@ -92,10 +92,10 @@ export function CoinDetailScreen({ id }: CoinDetailScreenProps) {
             </View>
           </View>
 
-          {/* Chart area — interactive 24h chart lands in T13 */}
-          <View className="h-40 items-center justify-center rounded-2xl border border-border bg-surface">
-            <Text variant="muted">{t('common.comingSoon')}</Text>
-          </View>
+          <PriceChart
+            id={id}
+            isUp={(coin.price_change_percentage_24h ?? 0) >= 0}
+          />
 
           <View className="flex-row items-center justify-between rounded-2xl border border-border bg-surface p-4">
             <Text variant="muted">{t('coin.yourBalance')}</Text>
