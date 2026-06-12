@@ -61,7 +61,14 @@
     "language": "Idioma",
     "languageSystem": "Sistema",
     "languageEn": "English",
-    "languageEs": "Español"
+    "languageEs": "Español",
+    "reset": "Restablecer portafolio",
+    "resetHint": "Vuelve a los saldos iniciales y borra el historial de transacciones",
+    "resetConfirmTitle": "¿Restablecer portafolio?",
+    "resetConfirmMessage": "Se restaurarán los saldos iniciales y se borrará el historial de transacciones.",
+    "resetCancel": "Cancelar",
+    "resetConfirm": "Restablecer",
+    "resetDone": "Portafolio restablecido"
   },
   "portfolio": {
     "title": "Portafolio",

@@ -68,6 +68,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Data layer: `PriceRepository` (`getMarkets(ids)`, `getMarketChart(id)`) in `src/lib/api/`; implementations swap behind `getPriceRepository()`: mock (captured fixtures in `lib/api/fixtures/`) ⇄ http (`coingecko-repository.ts`, one batched `/coins/markets` call — never coin-by-coin).
 - Repository selection: `useMock = mockMode || !apiKey` — key from `EXPO_PUBLIC_COINGECKO_API_KEY` (`.env`, gitignored); mock mode = zustand store in `lib/api/mock-mode.ts` (session-only); the Settings toggle must `queryClient.invalidateQueries()` after switching; keyless → toggle disabled, mock forced.
 - Mock-mode reads: UI uses `useMockActive()` (reactive — badge, switch); data layer uses `isMockActive()`/`activeApiKey()` (snapshot). Never read a non-reactive flag during render.
+- Reset portfolio (T18): `ResetCard` in Settings — destructive actions confirm via native `Alert.alert` (cancel + `style: 'destructive'`), then `resetPortfolio()` + success toast. Notifications deliberately survive the reset (they snapshot their Transaction).
 - API errors: typed `ApiError` with code union `RATE_LIMIT | NETWORK_ERROR | TIMEOUT | SERVER_ERROR | UNKNOWN` (`src/lib/errors/`); never surface raw fetch errors.
 - Query retry policy (queryClient defaults): transient codes only, max 3, exponential backoff capped 30s; 429 `Retry-After` overrides the backoff delay.
 - API types (`src/lib/api/types.ts`) mirror CoinGecko snake_case verbatim, trimmed to consumed fields. No API→domain mapping layer — documented README trade-off.
@@ -95,7 +96,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Token sources kept in sync: `src/global.css` (HSL vars) ↔ `tailwind.config.js` ↔ `src/lib/theme/colors.ts` (raw hex).
 - `primary` = belo-indigo (light) / belo-mint (dark). `bg-primary` pairs with `text-primary-foreground`.
 - Native-prop consumers (NativeTabs, navigation theme): `useTheme().colors` from `@/lib/theme`.
-- Selected/active states that need the primary brand color (segmented picker, mock badge, Switch `trackColor`): use `useTheme().colors` inline `style`, not `bg-primary`/`border-primary` classes — CSS-var color classes resolve unreliably in RN. Tint = 8-digit hex (`${colors.primary}1F`).
+- Selected/active states that need the primary brand color (segmented picker, mock badge, Switch `trackColor`): use `useTheme().colors` inline `style`, not `bg-primary`/`border-primary` classes — CSS-var color classes resolve unreliably in RN. Tint = 8-digit hex (`${colors.primary}1F`). Same applies to non-default `border-*` colors anywhere (`border-danger` rendered black on the reset button — inline `borderColor: colors.danger`); only `border-border` is proven reliable.
 - Theme preference: persisted in `features/settings/store.ts` (`system`/`light`/`dark`); the settings `ThemeCard` drives `setColorScheme`, and the root layout re-applies it on launch. `system` defers to nativewind/device.
 - Visual changes: verify light and dark.
 - `components/ui/` primitives: pull via `bunx @react-native-reusables/cli@latest add <name>` (copied source, owned in-repo). On arrival translate shadcn tokens → ours: `foreground→text` · `muted-foreground→text-muted` · `card→surface` · `muted`/`accent→surface-muted` · `destructive→danger`.

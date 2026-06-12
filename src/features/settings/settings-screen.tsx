@@ -6,6 +6,7 @@ import { Text } from '@/components/ui/text';
 
 import { LanguageCard } from './components/language-card';
 import { MockModeCard } from './components/mock-mode-card';
+import { ResetCard } from './components/reset-card';
 import { ThemeCard } from './components/theme-card';
 
 export function SettingsScreen() {
@@ -20,6 +21,7 @@ export function SettingsScreen() {
         <MockModeCard />
         <ThemeCard />
         <LanguageCard />
+        <ResetCard />
       </SafeAreaView>
     </View>
   );

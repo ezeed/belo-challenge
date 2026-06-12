@@ -61,7 +61,14 @@
     "language": "Language",
     "languageSystem": "System",
     "languageEn": "English",
-    "languageEs": "Español"
+    "languageEs": "Español",
+    "reset": "Reset portfolio",
+    "resetHint": "Restore the seed balances and clear the transaction history",
+    "resetConfirmTitle": "Reset portfolio?",
+    "resetConfirmMessage": "Seed balances will be restored and the transaction history cleared.",
+    "resetCancel": "Cancel",
+    "resetConfirm": "Reset",
+    "resetDone": "Portfolio reset"
   },
   "portfolio": {
     "title": "Portfolio",
