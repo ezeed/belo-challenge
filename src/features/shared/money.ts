@@ -33,3 +33,11 @@ export function formatPercent(value: Numeric, locale?: string): string {
     signDisplay: 'exceptZero',
   }).format(big(value).div(100).toNumber());
 }
+
+/** Localized timestamp for history rows (e.g. "Jun 12, 2026, 2:30 PM"). */
+export function formatDateTime(timestampMs: number, locale?: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(timestampMs);
+}

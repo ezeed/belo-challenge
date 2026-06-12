@@ -10,6 +10,7 @@ export {
 export {
   big,
   formatAmount,
+  formatDateTime,
   formatPercent,
   formatUsd,
   type Numeric,

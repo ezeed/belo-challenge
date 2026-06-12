@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner-native';
 
 import { useMarkets } from '@/features/coins';
+import { addNotification } from '@/features/notifications';
 import { usePortfolioStore } from '@/features/portfolio';
 import { big, formatAmount, getAsset, type PriceMap } from '@/features/shared';
 
@@ -90,12 +91,18 @@ export function useSwapForm(initialFromId?: string) {
     return calculateSwap(pair.fromId, pair.toId, amount, prices);
   }, [amount, pair, prices]);
 
-  // T16 records the persistent notification here as well, after the
-  // Transaction resolves; the toast is the transient half of the alert.
+  // Req. 4's alert in two halves: transient toast + persisted notification
+  // (history view). Both fire here, after the Transaction resolves.
   const { mutate, isPending: isSubmitting } = useMutation({
     mutationFn: executeSwap,
     onSuccess: (transaction) => {
       setAmountState('');
+      addNotification({
+        id: transaction.id,
+        createdAt: transaction.timestamp,
+        kind: 'swap',
+        transaction,
+      });
       const locale = i18n.language;
       toast.success(t('swap.successTitle'), {
         description: t('swap.success', {

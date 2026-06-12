@@ -21,7 +21,10 @@
     "chartUnavailable": "Chart unavailable"
   },
   "notifications": {
-    "title": "Notifications"
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "clearAll": "Clear all",
+    "swapped": "Swapped {{from}} for {{to}}"
   },
   "swap": {
     "title": "Swap",

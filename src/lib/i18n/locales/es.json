@@ -21,7 +21,10 @@
     "chartUnavailable": "Gráfico no disponible"
   },
   "notifications": {
-    "title": "Notificaciones"
+    "title": "Notificaciones",
+    "empty": "Aún no hay notificaciones",
+    "clearAll": "Borrar todo",
+    "swapped": "Cambiaste {{from}} por {{to}}"
   },
   "swap": {
     "title": "Swap",
