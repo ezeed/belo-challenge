@@ -39,9 +39,15 @@ export function PortfolioScreen() {
   const isDesc = sort === 'desc';
   const SortIcon = isDesc ? ArrowDownWideNarrow : ArrowUpNarrowWide;
 
+  const openCoin = useCallback(
+    (id: string) => router.push(`/coin/${id}`),
+    [router],
+  );
+
   const renderItem: ListRenderItem<PortfolioRow> = useCallback(
     ({ item }) => (
       <AssetRow
+        id={item.id}
         name={item.name}
         symbol={item.symbol}
         image={item.image}
@@ -49,9 +55,10 @@ export function PortfolioScreen() {
         valueUsd={item.valueUsd}
         changePct24h={item.changePct24h}
         sparkline7d={item.sparkline7d}
+        onPress={openCoin}
       />
     ),
-    [],
+    [openCoin],
   );
 
   return (

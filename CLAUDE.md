@@ -30,7 +30,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 ## Business rules
 
 - Swap = the app's only write operation (asset→asset).
-- Buy/Sell price = spread pair: `sell = mid × (1 − s)` · `buy = mid × (1 + s)`.
+- Buy/Sell price = spread pair: `sell = mid × (1 − s)` · `buy = mid × (1 + s)` — `spreadPair(mid, s?)`, `DEFAULT_SPREAD` 0.5% (`features/shared/spread.ts`); T14's swap legs reuse it.
 - Swap conversion: from-asset @ sell → USD → to-asset @ buy.
 - Assets: USDT, USDC, DAI, BTC, ETH. USD = unit of account, not an asset.
 - Asset catalog, `CoinId`, `Holdings = Record<CoinId, number>`, seed balances: `src/features/shared/assets.ts`.
@@ -46,6 +46,7 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - `src/lib/` = technical infra (theme, and per future tasks: api, errors, query, i18n).
 - `src/features/<feature>/` = business logic; public API via `index.ts` barrel; cross-feature imports through barrels only.
 - `src/features/shared/` = domain logic used by 2+ features.
+- Feature graph is acyclic: `coins` (server-state hooks + presentational market components) never imports `portfolio`. Screens joining holdings × market data (`portfolio-screen`, `coin-detail-screen`) live in `features/portfolio` — putting them in `coins` would create a barrel require cycle.
 - Pure logic: co-located `*.ts` + `*.test.ts`.
 - Hooks: `use-<name>.ts` (kebab-case), owned by `features/<feature>/hooks/` or their `lib/<module>/`. No global hooks directory.
 - Aliases: `@/*` → `./src/*` · `@/assets/*` → `./assets/*`.
@@ -69,6 +70,8 @@ Constraints: CoinGecko rate limit ≈ 10–30 calls/min — handle with caching 
 - Client/server state join at render only, via feature hooks (`usePortfolio` — holdings × prices → rows + total; row props kept primitive for `memo`).
 - Pull-to-refresh: feature hooks own a dedicated `isRefreshing` + `refresh()` (set only by the pull gesture) — never bind `RefreshControl.refreshing` to the query's `isRefetching` (background refetches would animate the spinner in). Screens stay declarative.
 - Fixed 5-asset list = `FlatList` + memoized rows (deliberately not FlashList — README trade-off). Virtualize only growable lists.
+- Memoized list rows: callbacks are `(id) => void` + the row's `id` prop — never per-row inline closures (they defeat `memo`).
+- Coin detail (`features/portfolio/coin-detail-screen.tsx`): `useCoinMarket(id)` derives one coin from the batched markets query (never a per-coin request); Convert CTA renders only when holding > 0 → `/swap?from=<id>`; screen sets its native header title via `<Stack.Screen options>`. Balance line masks under `hideAmounts`; market prices don't.
 
 ## i18n
 

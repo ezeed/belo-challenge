@@ -14,6 +14,7 @@ import {
 } from '@/features/shared';
 
 interface AssetRowProps {
+  id: string;
   name: string;
   symbol: string;
   image?: string;
@@ -21,11 +22,13 @@ interface AssetRowProps {
   valueUsd: string;
   changePct24h?: number;
   sparkline7d?: number[];
-  onPress?: () => void;
+  /** Stable callback receiving the row's id — keeps `memo` effective (no per-row closures). */
+  onPress?: (id: string) => void;
 }
 
 /** Memoized: primitive or reference-stable props only — rows skip re-render unless their data changes. */
 export const AssetRow = memo(function AssetRow({
+  id,
   name,
   symbol,
   image,
@@ -47,7 +50,7 @@ export const AssetRow = memo(function AssetRow({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${name}, ${holding}, ${value}`}
-      onPress={onPress}
+      onPress={onPress ? () => onPress(id) : undefined}
       className="flex-row items-center gap-3 rounded-2xl border border-border bg-surface p-4 active:opacity-80"
     >
       <Image source={image} className="h-10 w-10 rounded-full" />

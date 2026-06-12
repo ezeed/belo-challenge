@@ -9,7 +9,15 @@
     "mockBadge": "Datos de prueba"
   },
   "coin": {
-    "title": "Detalle de moneda"
+    "title": "Detalle de moneda",
+    "currentPrice": "Precio actual",
+    "sell": "Venta",
+    "buy": "Compra",
+    "max24h": "Máx 24h",
+    "min24h": "Mín 24h",
+    "yourBalance": "Tu saldo",
+    "convert": "Convertir",
+    "notFound": "Moneda no encontrada"
   },
   "notifications": {
     "title": "Notificaciones"

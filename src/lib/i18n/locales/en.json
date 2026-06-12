@@ -9,7 +9,15 @@
     "mockBadge": "Mock data"
   },
   "coin": {
-    "title": "Coin Detail"
+    "title": "Coin Detail",
+    "currentPrice": "Current price",
+    "sell": "Sell",
+    "buy": "Buy",
+    "max24h": "24h high",
+    "min24h": "24h low",
+    "yourBalance": "Your balance",
+    "convert": "Convert",
+    "notFound": "Coin not found"
   },
   "notifications": {
     "title": "Notifications"

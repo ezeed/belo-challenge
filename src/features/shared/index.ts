@@ -19,5 +19,6 @@ export {
   toggleHideAmounts,
   usePrivacyStore,
 } from './privacy-store';
+export { DEFAULT_SPREAD, spreadPair, type SpreadPair } from './spread';
 export { type Transaction } from './transaction';
 export { valueAsset, valuePortfolio, type PriceMap } from './value-portfolio';

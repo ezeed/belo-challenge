@@ -51,7 +51,13 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={NAV_THEMES[scheme]}>
-        <Stack>
+        <Stack
+          screenOptions={{
+            // pushed screens: header blends into the body (no surface seam)
+            headerStyle: { backgroundColor: THEME[scheme].background },
+            headerShadowVisible: false,
+          }}
+        >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="coin/[id]"
