@@ -1,3 +1,7 @@
+// Hermes lacks Intl.PluralRules; i18next v24+ hard-requires it — without this
+// polyfill `changeLanguage()` throws (app crash, looping via the persisted pref).
+import 'intl-pluralrules';
+
 import { getLocales } from 'expo-localization';
 import i18next, { use as applyPlugin } from 'i18next';
 import { initReactI18next } from 'react-i18next';
