@@ -150,4 +150,6 @@ without rendering anything.
 
 ## Evidence
 
+Tested in real devices with eas build and simulators
+
 https://github.com/user-attachments/assets/aea853f8-f005-4cc6-b00b-47cde973b7bd
