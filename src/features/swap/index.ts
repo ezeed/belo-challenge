@@ -6,10 +6,6 @@ export {
   type SwapValidationResult,
   MIN_SWAP_USD,
 } from './validate-swap';
-export {
-  executeSwap,
-  SwapValidationError,
-  type ExecuteSwapParams,
-} from './swap-service';
+export { executeSwap, type ExecuteSwapParams } from './swap-service';
 export { SwapScreen } from './swap-screen';
 export { AssetPickerSheet } from './components/asset-picker-sheet';

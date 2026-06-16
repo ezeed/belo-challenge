@@ -8,7 +8,7 @@ export type PriceMap = Partial<Record<CoinId, number>>;
 /** USD value of one holding; a missing price values it at 0. */
 export function valueAsset(amount: number, priceUsd?: number): Big {
   if (priceUsd === undefined) return big(0);
-  return big(String(amount)).times(big(String(priceUsd)));
+  return big(amount).times(big(priceUsd));
 }
 
 /** Consolidated USD value of all holdings. */

@@ -8,6 +8,15 @@
     "comingSoon": "Coming soon",
     "mockBadge": "Mock data"
   },
+  "errors": {
+    "title": "Couldn't update prices",
+    "rateLimit": "Too many requests to CoinGecko. Try again shortly or use offline data.",
+    "network": "No internet connection.",
+    "timeout": "The request timed out.",
+    "server": "CoinGecko is having issues. Try again shortly.",
+    "unknown": "Something went wrong fetching prices.",
+    "useMock": "Use offline data"
+  },
   "coin": {
     "title": "Coin Detail",
     "currentPrice": "Current price",
@@ -18,13 +27,18 @@
     "yourBalance": "Your balance",
     "convert": "Convert",
     "notFound": "Coin not found",
-    "chartUnavailable": "Chart unavailable"
+    "chartUnavailable": "Chart unavailable",
+    "range1d": "1D",
+    "range7d": "7D",
+    "range1m": "1M",
+    "range1y": "1Y"
   },
   "notifications": {
     "title": "Notifications",
     "empty": "No notifications yet",
     "clearAll": "Clear all",
-    "swapped": "Swapped {{from}} for {{to}}"
+    "swapped": "Swapped {{from}} for {{to}}",
+    "unread": "Unread"
   },
   "swap": {
     "title": "Swap",
@@ -79,6 +93,8 @@
     "showAmounts": "Show amounts",
     "ascending": "Ascending",
     "descending": "Descending",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "notificationsUnread_one": "Notifications, {{count}} unread",
+    "notificationsUnread_other": "Notifications, {{count}} unread"
   }
 }

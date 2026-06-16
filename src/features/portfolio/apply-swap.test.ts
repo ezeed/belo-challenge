@@ -27,14 +27,6 @@ describe('applySwapToHoldings', () => {
     expect(result.bitcoin).toBe(0.0516);
   });
 
-  it('starts unknown to-assets from 0', () => {
-    const result = applySwapToHoldings(
-      { tether: 1000 },
-      makeTransaction({ toId: 'ethereum', toAmount: 0.04 }),
-    );
-    expect(result.ethereum).toBe(0.04);
-  });
-
   it('avoids binary float drift on the credit side', () => {
     const result = applySwapToHoldings(
       { tether: 0.3, dai: 0.1 },

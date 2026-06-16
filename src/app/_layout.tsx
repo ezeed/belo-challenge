@@ -95,7 +95,7 @@ export default function RootLayout() {
               }}
             />
           </Stack>
-          <Toaster theme={scheme} />
+          <Toaster theme={scheme} richColors closeButton />
         </ThemeProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>

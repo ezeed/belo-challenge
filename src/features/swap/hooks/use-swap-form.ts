@@ -46,9 +46,9 @@ export function useSwapForm(initialFromId?: string) {
   }, []);
 
   const setMax = useCallback(() => {
-    const balance = usePortfolioStore.getState().holdings[pair.fromId] ?? 0;
+    const balance = usePortfolioStore.getState().holdings[pair.fromId];
     // toFixed() (no args) never renders exponential notation, unlike String().
-    setAmountState(big(String(balance)).toFixed());
+    setAmountState(big(balance).toFixed());
   }, [pair.fromId]);
 
   const prices = useMemo<PriceMap>(
@@ -120,8 +120,6 @@ export function useSwapForm(initialFromId?: string) {
       toId: pair.toId,
       fromAmount: amount,
       prices,
-      // Fresh snapshot at submit time — executeSwap re-validates as the race guard.
-      holdings: usePortfolioStore.getState().holdings,
     });
   }, [amount, mutate, pair, prices]);
 

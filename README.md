@@ -1,165 +1,149 @@
 # belo-challenge
 
-Crypto-wallet **swap simulator**: consolidated portfolio, live CoinGecko prices, buy/sell spread,
-asset-to-asset swaps with instant balance updates, notifications history, and EN/ES localization.
+A crypto-wallet **swap simulator** built with Expo / React Native: a consolidated USD portfolio,
+live CoinGecko prices, asset-to-asset swaps with instant balance updates, a notifications history,
+and EN/ES localization.
 
-Built with Expo SDK 56 (dev build), TypeScript strict, Expo Router, NativeWind, Zustand,
-TanStack Query, i18next, and Jest.
+Expo SDK 56 **dev build** (not Expo Go) · TypeScript (strict) · bun.
 
 ## Features
 
-1. **Portfolio** — consolidated USD balance + per-asset holdings (USDT, USDC, DAI, BTC, ETH),
-   live prices, 24h change, 7-day sparklines, pull-to-refresh, sort by value.
-2. **Coin detail** — current buy/sell price (spread pair over the API mid), 24h high/low,
-   interactive 24h chart (scrub crosshair + haptics), your balance, Convert shortcut.
-3. **Swap** — any supported pair at real-time prices; belo-style form (auto-focus, flip with
-   animation, native asset-picker sheet); validations: sufficient funds, minimum 1 USD equivalent;
-   balances update immediately after a successful swap.
-4. **Notifications** — success toast on swap completion + persisted history view (bell on Portfolio).
-5. **Localization** — English and Spanish; follows the device language, overridable in Settings.
+1. **Portfolio** — total USD balance + the five assets (USDT, USDC, DAI, BTC, ETH) with live price,
+   24h change, 7-day sparkline, pull-to-refresh, and sort by value.
+2. **Coin detail** — buy/sell price (a spread over the API mid), 24h high/low, an interactive price
+   chart with 1D / 7D / 1M / 1Y ranges (scrub + haptics), your balance, and a Convert shortcut.
+3. **Swap** — any pair at live prices; validates sufficient funds and a 1 USD minimum; balances
+   update immediately after a successful swap.
+4. **Notifications** — a toast when a swap completes + a persisted history (bell on Portfolio, with
+   an unread badge).
+5. **Localization** — English and Spanish, following the device language (overridable in Settings).
 
-### Extras (not in the brief)
+Extras: amount-privacy toggle, light/dark/system theme, reset portfolio, a Mock Mode switch, and a
+Convert deep-link (`/swap?from=<id>`).
 
-- Amount privacy: eye toggle masks every monetary amount (percentages/charts stay visible).
-- Theming: light/dark/system, persisted, with a brand-token design system.
-- Reset portfolio: re-seed balances from Settings (native confirm dialog).
-- Mock-mode badge + in-app switch (see below).
-- Swap deep-link: coin detail's Convert pre-selects the from-asset (`/swap?from=<coinId>`).
+## Stack
 
-## Getting started
+| Area    | Choice                                                                       |
+| ------- | ---------------------------------------------------------------------------- |
+| UI      | Expo Router · NativeWind · Reanimated · react-native-svg · wagmi-charts      |
+| State   | Zustand (client, persisted to MMKV) · TanStack Query (server)                |
+| Data    | CoinGecko REST via axios, behind a swappable `PriceRepository` (live ⇄ mock) |
+| Money   | big.js (no float math on balances)                                           |
+| i18n    | i18next + expo-localization                                                  |
+| Quality | Jest + React Native Testing Library · ESLint · Prettier · TypeScript         |
 
-Prerequisites: [bun](https://bun.sh), Xcode (iOS). This is an Expo **dev build** project —
-it does not run in Expo Go.
+## Run locally
+
+Needs [bun](https://bun.sh) and a native toolchain — Xcode (iOS) and/or Android Studio. It's a dev
+build, so it does **not** run in Expo Go.
 
 ```bash
 bun install
 
-# optional: live prices (otherwise mock mode is forced)
-echo 'EXPO_PUBLIC_COINGECKO_API_KEY=<your-demo-key>' > .env
+# optional — live prices. Without a key, Mock Mode (bundled fixtures) is used.
+echo 'EXPO_PUBLIC_COINGECKO_API_KEY=<your-coingecko-demo-key>' > .env
 
-bun run ios        # builds the dev client and starts Metro
+bun run ios       # build the iOS dev client + start Metro
+bun run android   # build the Android dev client + start Metro
+bun run start     # just start Metro (when the dev client is already installed)
 ```
 
-Other commands: `bun run test` (Jest via jest-expo) · `bun run typecheck` · `bun run lint` ·
-`bun run format`.
+Checks: `bun run typecheck` · `bun run lint` · `bun run test` · `bun run format`.
 
-### Mock mode
+## Build (Android & iOS)
 
-CoinGecko's demo tier allows ~10–30 calls/min. The data layer sits behind a `PriceRepository`
-interface with two implementations: HTTP (one batched `/coins/markets` call — never coin-by-coin)
-and mock (captured JSON fixtures). Without an API key the app forces mock mode; with one, you can
-flip the Settings switch to develop offline or when rate-limited. Typed API errors
-(`RATE_LIMIT | NETWORK_ERROR | TIMEOUT | SERVER_ERROR | UNKNOWN`) drive the retry policy:
-transient codes only, max 3, exponential backoff capped at 30s, with 429 `Retry-After` honored.
+The native `ios/` and `android/` projects are committed, so there are two paths:
 
-## Architecture
+- **Local:** `bun run ios` / `bun run android` (`expo run:*`). If the native folders drift from
+  config, regenerate them with `bunx expo prebuild`.
+- **Cloud (EAS):** profiles live in `eas.json` — `preview` (APK) and `production`.
+
+  ```bash
+  bunx eas-cli build -p android --profile preview      # installable APK
+  bunx eas-cli build -p android --profile production   # Play Store AAB
+  bunx eas-cli build -p ios --profile production       # needs an Apple Developer account
+  ```
+
+App id: `com.ezeed.belochallenge` (both platforms).
+
+## Project structure
 
 ```
 src/
-  app/              # Expo Router routes only (no logic)
-  components/       # shared UI · components/ui = design-system primitives
-  lib/              # technical infra: api, errors, query, i18n, storage, theme
+  app/          # routes only (Expo Router): (tabs), coin/[id], notifications, asset-picker
+  components/   # shared UI; components/ui = design-system primitives
+  lib/          # infrastructure: api, errors, query, storage, i18n, theme
   features/
-    shared/         # domain used by 2+ features: assets, money, spread, transaction…
-    coins/          # server-state hooks + presentational market components
-    portfolio/      # holdings store + screens joining holdings × market data
-    swap/           # swap engine (pure), swap service, form, screens
-    notifications/  # persisted swap notifications + history screen
+    shared/         # domain used by 2+ features: assets, money, spread, transaction, valuation
+    coins/          # price hooks + market UI (chart, price card)
+    portfolio/      # holdings store + screens that join holdings × prices
+    swap/           # swap engine (pure), swap service, form, asset picker
+    notifications/  # persisted swap history
     settings/       # theme, language, mock mode, reset
 ```
 
-- Features expose a public API via `index.ts` barrels; the feature graph is acyclic
-  (`coins` never imports `portfolio`; screens that join holdings × market data live in `portfolio`).
-- **Server state** (prices, history) lives in TanStack Query; **client state** (holdings,
-  transactions, preferences) in Zustand, persisted to MMKV with sync rehydration. The two never
-  mix — they join at render, inside feature hooks.
-- Store writes are exported module functions (`applySwap`, `resetPortfolio`…), never public
-  setters; the swap is the app's only write and goes through an API-shaped seam (see below).
+Rule: features talk only through their `index.ts` barrel, and the graph is acyclic — `coins` never
+imports `portfolio`, and screens that join holdings with prices live in `portfolio`.
 
-### Business rules
+## Architecture & decisions
 
-- Buy/sell prices are a **spread pair** over the API mid: `sell = mid × (1 − s)`,
-  `buy = mid × (1 + s)`, default spread 0.5%.
-- Swap conversion: from-asset at **sell** → USD → to-asset at **buy**; the spread cost is
-  surfaced as the fee.
-- Minimum swap: 1 USD equivalent (valued at the sell price). USD is the unit of account, not an asset.
-- All money math uses big.js constructed from strings — no float arithmetic on balances;
-  `.toNumber()` only at the `Transaction` record boundary.
-- The swap engine is pure and fully unit-tested: `calculateSwap` + `validateSwap` (typed error
-  union, never throws); `executeSwap` re-validates at confirm time as a race guard.
+- **One write path.** A swap is the only thing that changes data. It goes through `executeSwap()`,
+  a single async, API-shaped function — so dropping in a real backend later is a one-function
+  change. The UI never writes to the store directly. The form validates and gates the button, so
+  `executeSwap` just commits (no re-check — there's no concurrency to race locally).
+- **Two kinds of state, kept apart.** Holdings, transactions, and preferences are **client state**
+  (Zustand, saved to MMKV, survive a restart). Prices and history are **server state** (TanStack
+  Query, in memory, refetched). They meet only at render time.
+- **Prices and the swap.** The portfolio's one `/coins/markets` call gives a USD mid price per
+  asset. Buy and sell are derived from it with a 0.5% spread (`sell = mid×(1−s)`,
+  `buy = mid×(1+s)`). Every swap converts from-asset → USD → to-asset, so USD is the bridge. All
+  money math uses big.js.
+- **Rate limits and errors.** Prices are real-time. CoinGecko's demo tier is ~10–30 calls/min, so
+  failures are expected: axios maps them to typed `ApiError`s in one interceptor, the query client
+  retries transient ones (max 3, backoff, honoring `Retry-After`), and a single toast shows the
+  error with a "use offline data" shortcut to Mock Mode. With no API key, Mock Mode (bundled JSON
+  fixtures) is forced.
+- **Kept lean for a challenge.** No store schema versioning or migrations (there are no prior
+  installs to upgrade), no API→domain mapping layer (CoinGecko's shape is the domain here), and the
+  query cache isn't persisted (only client state needs to survive a restart).
 
-## Design decisions
+Smaller choices: `FlatList` + memoized rows for the fixed 5-asset list (virtualize only growable
+lists, like the history); native sheets and toasts over hand-rolled overlays; pull-to-refresh uses
+its own flag, not the query's `isRefetching`, so background refetches don't animate the spinner; the
+chart scrub label formats `$` by hand because Intl isn't available inside the Reanimated worklet.
 
-### Balances: local state behind an API-shaped seam
+## Why these libraries
 
-In the real product, balances are server state — the backend executes a swap and returns new
-holdings. This simulator keeps holdings in a Zustand store (single source of truth: sync reads,
-trivial persistence, no cache-invalidation choreography for state that can't actually go stale),
-but the UI never mutates it directly. The app's only write goes through an async, service-shaped
-boundary — `executeSwap(params): Promise<Transaction>` — consumed via `useMutation`, so screens are
-already coded against pending/error states and a `Promise`-based contract. Plugging in a real
-backend later means reimplementing one function, not reworking the screens.
-
-The alternative — modeling a full fake wallet backend with balances in the TanStack Query cache —
-was rejected: it creates two sources of truth (mock storage + query cache) and forces solving
-latency problems (invalidation, optimistic updates, rollback) that cannot occur locally.
-
-### Pull-to-refresh state: own flag in the feature hook, not the query's `isRefetching`
-
-TanStack Query can't distinguish _who_ triggered a fetch: `isRefetching` is true for every
-background refetch (mock-mode toggle invalidation, staleTime expiry, future polling). Binding it to
-`RefreshControl.refreshing` makes iOS animate the pull spinner in — pushing the list down — when the
-user never pulled. The pull spinner belongs exclusively to the pull gesture, so the feature hook
-(`usePortfolio`) owns a dedicated `isRefreshing` flag set only by its `refresh()` action, and the
-screen stays purely declarative. `isPending` has no such problem (first-load only) and maps to
-skeletons. This is the pattern for every screen with pull-to-refresh.
-
-### No API→domain mapping layer
-
-API types mirror CoinGecko's snake_case verbatim, trimmed to the consumed fields. A mapping layer
-(camelCase domain models, converters, double type definitions) buys insulation from an API this app
-treats as its de-facto domain vocabulary — cost without benefit at this scope. The seam where it
-would slot in later is the `PriceRepository` implementations.
-
-### Query-cache persistence: deliberately skipped
-
-The spec's persistence requirement is satisfied by client state (Zustand → MMKV): holdings,
-transactions, notifications, and preferences survive restarts. Persisting the TanStack Query cache
-to disk was considered for rate-limited cold starts and skipped: stale prices rendered as fresh are
-worse than a skeleton, and mock mode + the retry policy already cover the offline/limited case.
-
-### FlatList over FlashList
-
-The asset list is fixed at five rows — virtualization pressure is zero, so FlashList's setup cost
-buys nothing. `FlatList` + memoized rows (primitive props, `(id) => void` callbacks) is enough.
-Growable lists (notifications history) are virtualized; that's the rule: virtualize only what grows.
-
-### Chart crosshair: manual `$` formatting
-
-The scrub label runs as a Reanimated worklet on the UI thread, where Intl/i18next aren't available.
-The crosshair therefore formats prices manually (`$` + fixed decimals) instead of through the app's
-Intl helpers — a deliberate, contained inconsistency; all JS-thread amounts use the shared helpers.
-
-### Native presentation over JS imitations
-
-The asset picker started as a hand-rolled RN `Modal` bottom sheet and was replaced by a native
-`formSheet` route (expo-router + react-native-screens): the JS backdrop pops in with the content,
-the native sheet doesn't. Same reasoning for toasts — after a native toast lib (burnt) hit Xcode's
-`SwiftUICore` linker restriction, `sonner-native` (pure JS, zero native build risk) was chosen over
-maintaining a linker workaround for a toast.
-
-### 24h change color: no neutral state (deferred)
-
-The 24h % and the row sparkline color binary by the raw sign, while the displayed percentage is
-rounded to 2 decimals — so a raw `-0.004%` renders as `0 %` tinted red, giving a "bad news" first
-impression for a change that is effectively zero. A third, gray "flat" state keyed to display
-precision (|pct| < 0.005) was considered and deliberately deferred: it's UX polish with no
-engineering signal for this challenge's scope.
+- **Expo + dev build** — a real native app (MMKV, haptics, native screens) with config-as-code and
+  one-command EAS builds. A dev build rather than Expo Go because those native modules can't load in
+  Expo Go.
+- **Expo Router** — file-based routing that gives native stack, tabs, and sheets (via
+  react-native-screens) plus typed routes, with little boilerplate.
+- **Zustand** — client state with almost no ceremony: plain module-function actions, easy selectors,
+  trivial to persist. Redux is overkill at this scope; Context would cause needless re-renders.
+- **TanStack Query** — handles the hard parts of server data (caching, dedupe, retries,
+  loading/error/stale states) so prices aren't a hand-rolled cache, and keeps server state cleanly
+  separate from client state.
+- **MMKV** — synchronous storage, so persisted stores rehydrate before the first render (no
+  hydration flash). AsyncStorage is async and would flash.
+- **NativeWind** — Tailwind classes in RN: fast, consistent styling and one light/dark token set,
+  without scattering `StyleSheet` objects.
+- **big.js** — exact decimal math for balances; plain JS floats lose precision on money.
+- **axios** — built-in timeout and a response interceptor, so error classification lives in one
+  place; less plumbing than `fetch` (no manual AbortController, query strings, or JSON parsing).
+- **i18next + expo-localization** — mature i18n with pluralization and typed keys, seeded from the
+  device locale.
+- **react-native-wagmi-charts + react-native-svg** — a ready-made interactive chart (scrub
+  gestures, line/candle) instead of building chart interaction from scratch; SVG powers the
+  lightweight per-row sparkline.
+- **sonner-native** — pure-JS toasts with no native build risk (a native toast lib, `burnt`, hit a
+  Swift linker error, so this replaced it).
+- **Jest + React Native Testing Library** — the standard Expo test stack, used here mostly on the
+  pure logic.
 
 ## Testing
 
-`bun run test` — 90 unit tests over the pure modules: money helpers, spread pair, portfolio
-valuation, swap calculation/validation, holdings mutation, amount-input sanitizer, sparkline
-normalization, and API error mapping. Pure logic is co-located with its tests
-(`*.ts` + `*.test.ts`) and kept free of React/RN imports, so the business core tests without
-rendering anything.
+`bun run test` — 88 unit tests over the pure logic: money helpers, spread, portfolio valuation,
+swap calculation/validation, holdings update, input sanitizer, sparkline, and API-error mapping.
+Pure modules sit next to their tests (`*.ts` + `*.test.ts`) and import no React, so the core tests
+without rendering anything.

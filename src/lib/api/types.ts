@@ -19,6 +19,12 @@ export interface CoinMarket {
   sparkline_in_7d?: { price: number[] };
 }
 
+/**
+ * `market_chart` ranges the app offers. Granularity is CoinGecko's:
+ * 1 → 5-minutely · 7/30 → hourly · 365 → daily.
+ */
+export type ChartDays = 1 | 7 | 30 | 365;
+
 /** `/coins/{id}/market_chart` response. */
 export interface MarketChart {
   /** `[timestamp_ms, price]` pairs. */

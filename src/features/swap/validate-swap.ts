@@ -78,7 +78,7 @@ export function validateSwap(params: ValidateSwapParams): SwapValidationResult {
   }
 
   // 4. Minimum 1 USD equivalent (from-asset valued at its sell price).
-  const { sell: fromSell } = spreadPair(String(fromMid), spread);
+  const { sell: fromSell } = spreadPair(fromMid, spread);
   const usdValue = amount.times(fromSell);
 
   if (usdValue.lt(MIN_SWAP_USD)) {
@@ -86,7 +86,7 @@ export function validateSwap(params: ValidateSwapParams): SwapValidationResult {
   }
 
   // 5. Sufficient balance.
-  const balance = big(String(holdings[fromId] ?? 0));
+  const balance = big(holdings[fromId]);
 
   if (amount.gt(balance)) {
     return { ok: false, error: 'INSUFFICIENT_FUNDS' };

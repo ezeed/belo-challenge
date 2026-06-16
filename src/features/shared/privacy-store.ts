@@ -15,7 +15,6 @@ export const usePrivacyStore = create<PrivacyState>()(
     }),
     {
       name: 'privacy',
-      version: 1,
       storage: createJSONStorage(() => zustandStorage),
     },
   ),

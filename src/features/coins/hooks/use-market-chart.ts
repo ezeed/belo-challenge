@@ -1,14 +1,15 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import type { CoinId } from '@/features/shared';
-import { getPriceRepository } from '@/lib/api';
+import { getPriceRepository, type ChartDays } from '@/lib/api';
 
-export function useMarketChart(id: CoinId) {
+export function useMarketChart(id: CoinId, days: ChartDays) {
   return useQuery({
-    queryKey: ['market-chart', id],
-    queryFn: () => getPriceRepository().getMarketChart(id),
-    // Keep the last good chart on screen across refetch errors and mock-mode
-    // key changes, instead of collapsing to a spinner/empty state.
+    queryKey: ['market-chart', id, days],
+    queryFn: () => getPriceRepository().getMarketChart(id, days),
+    // Keep the last good chart on screen across refetch errors, range
+    // switches and mock-mode key changes, instead of collapsing to a
+    // spinner/empty state.
     placeholderData: keepPreviousData,
   });
 }

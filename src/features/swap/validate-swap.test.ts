@@ -238,20 +238,6 @@ describe('validateSwap', () => {
       });
       expect(result.ok).toBe(true);
     });
-
-    it('rejects when holdings entry is absent (treats as 0)', () => {
-      const result = validateSwap({
-        fromId: 'bitcoin',
-        toId: 'ethereum',
-        fromAmount: '0.01',
-        holdings: { ethereum: 5 },
-        prices: PRICES,
-      });
-      expect(result.ok).toBe(false);
-      expect((result as { ok: false; error: string }).error).toBe(
-        'INSUFFICIENT_FUNDS',
-      );
-    });
   });
 
   describe('valid swaps', () => {

@@ -25,7 +25,6 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'settings',
-      version: 1,
       storage: createJSONStorage(() => zustandStorage),
     },
   ),

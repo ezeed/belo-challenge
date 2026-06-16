@@ -62,8 +62,8 @@ export function calculateSwap(
   }
 
   const amount = big(fromAmount);
-  const { sell: fromSell } = spreadPair(String(fromMid), spread);
-  const { buy: toBuy } = spreadPair(String(toMid), spread);
+  const { sell: fromSell } = spreadPair(fromMid, spread);
+  const { buy: toBuy } = spreadPair(toMid, spread);
 
   // USD received when selling fromId
   const usdValue = amount.times(fromSell);
@@ -80,8 +80,8 @@ export function calculateSwap(
   //   buy-side markup: toAmount × (toBuy − toMid)    = usdValue × (toBuy/toMid − 1) × (toMid/toBuy)
   // Simpler equivalent: fee = amount × fromMid × s  +  toAmount × toMid × s
   const s = big(spread);
-  const fromMidBig = big(String(fromMid));
-  const toMidBig = big(String(toMid));
+  const fromMidBig = big(fromMid);
+  const toMidBig = big(toMid);
   const feeUsd = amount
     .times(fromMidBig)
     .times(s)

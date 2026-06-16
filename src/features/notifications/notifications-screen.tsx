@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { BellOff, Trash2 } from 'lucide-react-native';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, Pressable, View, type ListRenderItem } from 'react-native';
 
@@ -11,6 +11,8 @@ import { useTheme } from '@/lib/theme';
 import { NotificationRow } from './components/notification-row';
 import {
   clearNotifications,
+  markAllRead,
+  markRead,
   useNotificationsStore,
   type AppNotification,
 } from './store';
@@ -21,9 +23,14 @@ export function NotificationsScreen() {
   const { colors } = useTheme();
   const notifications = useNotificationsStore((state) => state.notifications);
 
+  // Mark read on unmount: unread dots stay visible while reading; the badge
+  // clears once the user leaves. Zustand module action — not a React setState.
+  useEffect(() => markAllRead, []);
+
   const renderItem: ListRenderItem<AppNotification> = useCallback(
     ({ item }) => (
       <NotificationRow
+        id={item.id}
         fromAmount={item.transaction.fromAmount}
         fromSymbol={
           getAsset(item.transaction.fromId)?.symbol ?? item.transaction.fromId
@@ -34,6 +41,8 @@ export function NotificationsScreen() {
         }
         usdValue={item.transaction.usdValue}
         timestamp={item.createdAt}
+        read={item.read}
+        onPress={markRead}
       />
     ),
     [],

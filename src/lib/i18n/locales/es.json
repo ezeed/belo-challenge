@@ -8,6 +8,15 @@
     "comingSoon": "Próximamente",
     "mockBadge": "Datos de prueba"
   },
+  "errors": {
+    "title": "No se pudieron actualizar los precios",
+    "rateLimit": "Demasiadas solicitudes a CoinGecko. Reintenta en un momento o usa datos sin conexión.",
+    "network": "Sin conexión a internet.",
+    "timeout": "La solicitud expiró.",
+    "server": "CoinGecko tiene problemas. Reintenta en un momento.",
+    "unknown": "Ocurrió un error al obtener los precios.",
+    "useMock": "Usar datos sin conexión"
+  },
   "coin": {
     "title": "Detalle de moneda",
     "currentPrice": "Precio actual",
@@ -18,13 +27,18 @@
     "yourBalance": "Tu saldo",
     "convert": "Convertir",
     "notFound": "Moneda no encontrada",
-    "chartUnavailable": "Gráfico no disponible"
+    "chartUnavailable": "Gráfico no disponible",
+    "range1d": "1D",
+    "range7d": "7D",
+    "range1m": "1M",
+    "range1y": "1A"
   },
   "notifications": {
     "title": "Notificaciones",
     "empty": "Aún no hay notificaciones",
     "clearAll": "Borrar todo",
-    "swapped": "Cambiaste {{from}} por {{to}}"
+    "swapped": "Cambiaste {{from}} por {{to}}",
+    "unread": "Sin leer"
   },
   "swap": {
     "title": "Swap",
@@ -79,6 +93,8 @@
     "showAmounts": "Mostrar montos",
     "ascending": "Ascendente",
     "descending": "Descendente",
-    "notifications": "Notificaciones"
+    "notifications": "Notificaciones",
+    "notificationsUnread_one": "Notificaciones, {{count}} sin leer",
+    "notificationsUnread_other": "Notificaciones, {{count}} sin leer"
   }
 }

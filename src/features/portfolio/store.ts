@@ -28,7 +28,6 @@ export const usePortfolioStore = create<PortfolioState>()(
     }),
     {
       name: 'portfolio',
-      version: 1,
       storage: createJSONStorage(() => zustandStorage),
     },
   ),

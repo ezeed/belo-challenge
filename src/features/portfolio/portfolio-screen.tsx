@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 
 import { Text } from '@/components/ui/text';
+import { useUnreadCount } from '@/features/notifications';
 import { useMockActive } from '@/lib/api';
 import { useTheme } from '@/lib/theme';
 
@@ -39,6 +40,7 @@ export function PortfolioScreen() {
   const { rows, totalUsd, isPending, isRefreshing, refresh } =
     usePortfolio(sort);
   const mockActive = useMockActive();
+  const unreadCount = useUnreadCount();
 
   const isDesc = sort === 'desc';
   const SortIcon = isDesc ? ArrowDownWideNarrow : ArrowUpNarrowWide;
@@ -98,12 +100,32 @@ export function PortfolioScreen() {
                   )}
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel={t('portfolio.notifications')}
+                    accessibilityLabel={
+                      unreadCount > 0
+                        ? t('portfolio.notificationsUnread', {
+                            count: unreadCount,
+                          })
+                        : t('portfolio.notifications')
+                    }
                     hitSlop={8}
                     onPress={() => router.push('/notifications')}
                     className="h-10 w-10 items-center justify-center rounded-full bg-surface-muted active:opacity-80"
                   >
                     <Bell size={18} color={colors.text} />
+                    {unreadCount > 0 && (
+                      <View
+                        style={{ backgroundColor: colors.primary }}
+                        className="absolute -right-0.5 -top-0.5 h-[18px] min-w-[18px] items-center justify-center rounded-full px-1"
+                      >
+                        <Text
+                          style={{ color: colors.primaryForeground }}
+                          className="text-[10px] font-bold"
+                          allowFontScaling={false}
+                        >
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </Text>
+                      </View>
+                    )}
                   </Pressable>
                 </View>
               </View>

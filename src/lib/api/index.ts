@@ -3,13 +3,9 @@ import { activeApiKey } from './mock-mode';
 import { createMockRepository } from './mock-repository';
 import type { PriceRepository } from './price-repository';
 
-const instances: { mock?: PriceRepository; http?: PriceRepository } = {};
-
 export function getPriceRepository(): PriceRepository {
   const key = activeApiKey();
-  return key
-    ? (instances.http ??= createCoinGeckoRepository(key))
-    : (instances.mock ??= createMockRepository());
+  return key ? createCoinGeckoRepository(key) : createMockRepository();
 }
 
 export {
@@ -19,4 +15,4 @@ export {
   useMockActive,
 } from './mock-mode';
 export type { PriceRepository } from './price-repository';
-export type { CoinMarket, MarketChart } from './types';
+export type { ChartDays, CoinMarket, MarketChart } from './types';
