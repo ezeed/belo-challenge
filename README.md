@@ -147,3 +147,7 @@ chart scrub label formats `$` by hand because Intl isn't available inside the Re
 swap calculation/validation, holdings update, input sanitizer, sparkline, and API-error mapping.
 Pure modules sit next to their tests (`*.ts` + `*.test.ts`) and import no React, so the core tests
 without rendering anything.
+
+## Evidence
+
+https://github.com/user-attachments/assets/aea853f8-f005-4cc6-b00b-47cde973b7bd
